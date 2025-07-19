@@ -1,0 +1,21 @@
+# check if there is at least one published port
+
+#! web-service.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: Service
+metadata:
+    name: web-published
+    namespace: dockoro
+    labels:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: web
+spec:
+    selector:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: web
+    ports:
+        - name: web-80
+          port: 80
+          protocol: TCP
+          targetPort: web-80

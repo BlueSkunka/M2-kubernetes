@@ -1,0 +1,9 @@
+#! install-cache-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: install-cache
+    namespace: dockoro
+spec:
+    storageClassName: "hostpath" # see docker/desktop-storage-provisioner

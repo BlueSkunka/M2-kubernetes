@@ -1,0 +1,46 @@
+#! kustomization.yaml
+# Generated code, do not edit
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - ../../base
+patches:
+    - path: consumer-cache-persistentVolumeClaim.yaml
+    - path: consumer-maintenance_folder-persistentVolumeClaim.yaml
+    - path: consumer-oro_app-persistentVolumeClaim.yaml
+    - path: consumer-private_storage-persistentVolumeClaim.yaml
+    - path: consumer-public_storage-persistentVolumeClaim.yaml
+    - path: cron-cache-persistentVolumeClaim.yaml
+    - path: cron-maintenance_folder-persistentVolumeClaim.yaml
+    - path: cron-multihost_operation_folder-persistentVolumeClaim.yaml
+    - path: cron-oro_app-persistentVolumeClaim.yaml
+    - path: cron-private_storage-persistentVolumeClaim.yaml
+    - path: cron-public_storage-persistentVolumeClaim.yaml
+    - path: install-cache-persistentVolumeClaim.yaml
+    - path: install-oro_app-persistentVolumeClaim.yaml
+    - path: install-private_storage-persistentVolumeClaim.yaml
+    - path: install-public_storage-persistentVolumeClaim.yaml
+    - path: php-fpm-app-cache-persistentVolumeClaim.yaml
+    - path: php-fpm-app-maintenance_folder-persistentVolumeClaim.yaml
+    - path: php-fpm-app-multihost_operation_folder-persistentVolumeClaim.yaml
+    - path: php-fpm-app-oro_app-persistentVolumeClaim.yaml
+    - path: php-fpm-app-private_storage-persistentVolumeClaim.yaml
+    - path: php-fpm-app-public_storage-persistentVolumeClaim.yaml
+    - path: restore-cache-persistentVolumeClaim.yaml
+    - path: restore-oro_app-persistentVolumeClaim.yaml
+    - path: restore-private_storage-persistentVolumeClaim.yaml
+    - path: restore-public_storage-persistentVolumeClaim.yaml
+    - path: volume-init-oro_app-persistentVolumeClaim.yaml
+    - path: web-cache-persistentVolumeClaim.yaml
+    - path: web-init-nginx-persistentVolumeClaim.yaml
+    - path: web-maintenance_folder-persistentVolumeClaim.yaml
+    - path: web-nginx-persistentVolumeClaim.yaml
+    - path: web-oro_app-persistentVolumeClaim.yaml
+    - path: web-private_storage-persistentVolumeClaim.yaml
+    - path: web-public_storage-persistentVolumeClaim.yaml
+    - path: web-service.yaml
+    - path: ws-cache-persistentVolumeClaim.yaml
+    - path: ws-maintenance_folder-persistentVolumeClaim.yaml
+    - path: ws-oro_app-persistentVolumeClaim.yaml
+    - path: ws-private_storage-persistentVolumeClaim.yaml
+    - path: ws-public_storage-persistentVolumeClaim.yaml

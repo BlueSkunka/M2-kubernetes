@@ -1,0 +1,61 @@
+#! kustomization.yaml
+# Generated code, do not edit
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - 0-dockoro-namespace.yaml
+    - application-deployment.yaml
+    - consumer-cache-persistentVolumeClaim.yaml
+    - consumer-deployment.yaml
+    - consumer-maintenance_folder-persistentVolumeClaim.yaml
+    - consumer-oro_app-persistentVolumeClaim.yaml
+    - consumer-private_storage-persistentVolumeClaim.yaml
+    - consumer-public_storage-persistentVolumeClaim.yaml
+    - cron-cache-persistentVolumeClaim.yaml
+    - cron-deployment.yaml
+    - cron-maintenance_folder-persistentVolumeClaim.yaml
+    - cron-multihost_operation_folder-persistentVolumeClaim.yaml
+    - cron-oro_app-persistentVolumeClaim.yaml
+    - cron-private_storage-persistentVolumeClaim.yaml
+    - cron-public_storage-persistentVolumeClaim.yaml
+    - db-deployment.yaml
+    - db-expose.yaml
+    - default-network-policy.yaml
+    - install-cache-persistentVolumeClaim.yaml
+    - install-deployment.yaml
+    - install-oro_app-persistentVolumeClaim.yaml
+    - install-private_storage-persistentVolumeClaim.yaml
+    - install-public_storage-persistentVolumeClaim.yaml
+    - mail-deployment.yaml
+    - mail-expose.yaml
+    - php-fpm-app-cache-persistentVolumeClaim.yaml
+    - php-fpm-app-deployment.yaml
+    - php-fpm-app-maintenance_folder-persistentVolumeClaim.yaml
+    - php-fpm-app-multihost_operation_folder-persistentVolumeClaim.yaml
+    - php-fpm-app-oro_app-persistentVolumeClaim.yaml
+    - php-fpm-app-private_storage-persistentVolumeClaim.yaml
+    - php-fpm-app-public_storage-persistentVolumeClaim.yaml
+    - restore-cache-persistentVolumeClaim.yaml
+    - restore-deployment.yaml
+    - restore-oro_app-persistentVolumeClaim.yaml
+    - restore-private_storage-persistentVolumeClaim.yaml
+    - restore-public_storage-persistentVolumeClaim.yaml
+    - volume-init-deployment.yaml
+    - volume-init-oro_app-persistentVolumeClaim.yaml
+    - web-cache-persistentVolumeClaim.yaml
+    - web-deployment.yaml
+    - web-expose.yaml
+    - web-init-deployment.yaml
+    - web-init-nginx-persistentVolumeClaim.yaml
+    - web-maintenance_folder-persistentVolumeClaim.yaml
+    - web-nginx-persistentVolumeClaim.yaml
+    - web-oro_app-persistentVolumeClaim.yaml
+    - web-private_storage-persistentVolumeClaim.yaml
+    - web-public_storage-persistentVolumeClaim.yaml
+    - web-service.yaml
+    - ws-cache-persistentVolumeClaim.yaml
+    - ws-deployment.yaml
+    - ws-maintenance_folder-persistentVolumeClaim.yaml
+    - ws-oro_app-persistentVolumeClaim.yaml
+    - ws-private_storage-persistentVolumeClaim.yaml
+    - ws-public_storage-persistentVolumeClaim.yaml

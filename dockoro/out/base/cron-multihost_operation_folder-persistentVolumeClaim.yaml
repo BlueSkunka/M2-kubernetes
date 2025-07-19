@@ -1,0 +1,18 @@
+#! cron-multihost_operation_folder-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: cron-multihost-operation-folder
+    namespace: dockoro
+    labels:
+        com.docker.compose.service: cron
+        com.docker.compose.volume: multihost_operation_folder
+spec:
+    accessModes:
+        # TODO would need to check which services use this volume
+        - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+        requests:
+            storage: 100Mi

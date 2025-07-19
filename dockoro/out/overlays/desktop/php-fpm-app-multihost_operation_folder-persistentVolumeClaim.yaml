@@ -1,0 +1,9 @@
+#! php-fpm-app-multihost_operation_folder-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: php-fpm-app-multihost-operation-folder
+    namespace: dockoro
+spec:
+    storageClassName: "hostpath" # see docker/desktop-storage-provisioner

@@ -1,0 +1,18 @@
+#! web-cache-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: web-cache
+    namespace: dockoro
+    labels:
+        com.docker.compose.service: web
+        com.docker.compose.volume: cache
+spec:
+    accessModes:
+        # TODO would need to check which services use this volume
+        - ReadOnlyMany
+    volumeMode: Filesystem
+    resources:
+        requests:
+            storage: 100Mi

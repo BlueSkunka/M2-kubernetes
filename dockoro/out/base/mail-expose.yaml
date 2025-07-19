@@ -1,0 +1,21 @@
+#! mail-expose.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: Service
+metadata:
+    name: mail
+    namespace: dockoro
+    labels:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: mail
+spec:
+    selector:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: mail
+    ports:
+        - name: mail-1025
+          port: 1025
+          targetPort: mail-1025
+        - name: mail-8025
+          port: 8025
+          targetPort: mail-8025

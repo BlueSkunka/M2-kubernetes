@@ -1,0 +1,49 @@
+#! db-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: db
+    namespace: dockoro
+    labels:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: db
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: dockoro
+            com.docker.compose.service: db
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: dockoro
+                com.docker.compose.service: db
+                com.docker.compose.network.default: "true"
+        spec:
+            restartPolicy: unless-stopped
+            containers:
+                - name: db
+                  image: docker.io/oroinc/pgsql:17.2-alpine
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: POSTGRES_DB
+                      value: "orodb"
+                    - name: POSTGRES_PASSWORD
+                      value: "orodbpass"
+                    - name: POSTGRES_ROOT_PASSWORD
+                      value: "orodbpass"
+                    - name: POSTGRES_USER
+                      value: "orodbuser"
+                  livenessProbe:
+                    exec:
+                        command:
+                            - /bin/sh
+                            - -c
+                            - pg_isready -U${POSTGRES_USER} -d${POSTGRES_DB}
+                    initialDelaySeconds: 60
+                  ports:
+                    - name: db-5432
+                      containerPort: 5432

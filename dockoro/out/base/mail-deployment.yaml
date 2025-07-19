@@ -1,0 +1,42 @@
+#! mail-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mail
+    namespace: dockoro
+    labels:
+        com.docker.compose.project: dockoro
+        com.docker.compose.service: mail
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: dockoro
+            com.docker.compose.service: mail
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: dockoro
+                com.docker.compose.service: mail
+                com.docker.compose.network.default: "true"
+        spec:
+            restartPolicy: unless-stopped
+            containers:
+                - name: mail
+                  image: mailhog/mailhog
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: MH_MAILDIR_PATH
+                      value: "/home/mailhog/maildir"
+                    - name: MH_STORAGE
+                      value: "maildir"
+                    - name: MH_UI_WEB_PATH
+                      value: "mailcatcher"
+                  ports:
+                    - name: mail-1025
+                      containerPort: 1025
+                    - name: mail-8025
+                      containerPort: 8025

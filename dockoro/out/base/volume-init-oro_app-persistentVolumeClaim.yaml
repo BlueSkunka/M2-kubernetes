@@ -1,0 +1,18 @@
+#! volume-init-oro_app-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: volume-init-oro-app
+    namespace: dockoro
+    labels:
+        com.docker.compose.service: volume-init
+        com.docker.compose.volume: oro_app
+spec:
+    accessModes:
+        # TODO would need to check which services use this volume
+        - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+        requests:
+            storage: 100Mi
