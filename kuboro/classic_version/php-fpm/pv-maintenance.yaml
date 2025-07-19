@@ -11,3 +11,6 @@ spec:
   storageClassName: local
   hostPath:
     path: /oro-php-fpm/maintenance
+  claimRef:
+    name: php-fpm-maintenance-pvc
+    namespace: default

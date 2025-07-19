@@ -41,6 +41,8 @@ spec:
               mountPath: /var/www/oro/public/media
             - name: php-fpm-private-storage-pvc
               mountPath: /var/www/oro/var/data
+            - name: tmp
+              mountPath: /tmp
       initContainers:
         - name: volume-init
           image: oroinc/orocommerce-application:6.1.0
@@ -67,3 +69,5 @@ spec:
         - name: php-fpm-private-storage-pvc
           persistentVolumeClaim:
             claimName: php-fpm-private-storage-pvc
+        - name: tmp
+          emptyDir:

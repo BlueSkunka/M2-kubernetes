@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: websocket
+  name: orocommerce-websocket
   labels:
-    app: websocket
+    app: orocommerce-websocket
 spec:
   selector:
-    app: websocket
+    app: orocommerce-websocket
   ports:
   - port: 8080
     targetPort: 8080
-    name: websocket
+    name: orocommerce-websocket
   type: ClusterIP

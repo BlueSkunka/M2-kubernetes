@@ -17,7 +17,7 @@ spec:
       containers:
       - name: websocket
         image: oroinc/runtime:6.1-latest
-        command: ["websocket"]
+        args: ["websocket"]
         ports:
         - containerPort: 8080
           name: websocket

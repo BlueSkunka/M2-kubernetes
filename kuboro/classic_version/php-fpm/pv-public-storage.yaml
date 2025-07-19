@@ -11,3 +11,6 @@ spec:
   storageClassName: local
   hostPath:
     path: /oro-php-fpm/media
+  claimRef:
+    name: php-fpm-public-storage-pvc
+    namespace: default

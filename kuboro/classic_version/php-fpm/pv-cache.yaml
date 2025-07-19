@@ -11,3 +11,6 @@ spec:
   storageClassName: local
   hostPath:
     path: /oro-php-fpm/cache
+  claimRef:
+    name: php-fpm-cache-pvc
+    namespace: default

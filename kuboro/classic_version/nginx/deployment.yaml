@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: orocommerce-nginx
   labels:
-    app: nginx
+    app: orocommerce-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: orocommerce-nginx
   template:
     metadata:
       labels:
-        app: nginx
+        app: orocommerce-nginx
     spec:
       containers:
       - name: nginx
         image: oroinc/runtime:6.1-latest
         ports:
         - containerPort: 80
-        command: ["nginx"]
-        # securityContext:
-        #   runAsNonRoot: true
-        #   runAsUser: 2002
+        args: ["nginx"]
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2002
         # livenessProbe:
         #   httpGet:
         #     path: /
@@ -32,6 +32,16 @@ spec:
         volumeMounts:
           - name: nginx-pvc
             mountPath: /opt/oro-nginx
+          - name: php-fpm-app-pvc
+            mountPath: /var/www/oro
+          - name: php-fpm-cache-pvc
+            mountPath: /var/www/oro/var/cache
+          - name: php-fpm-maintenance-pvc
+            mountPath: /var/www/oro/var/maintenance
+          - name: php-fpm-public-storage-pvc
+            mountPath: /var/www/oro/public/media
+          - name: php-fpm-private-storage-pvc
+            mountPath: /var/www/oro/var/data
       initContainers:
       - name: nginx-init
         image: oroinc/orocommerce-application:6.1.0
@@ -44,6 +54,21 @@ spec:
           - name: nginx-pvc
             mountPath: /opt/oro-nginx
       volumes:
-      - name: nginx-pvc
-        persistentVolumeClaim:
-          claimName: nginx-pvc
+        - name: nginx-pvc
+          persistentVolumeClaim:
+            claimName: nginx-pvc
+        - name: php-fpm-app-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-app-pvc
+        - name: php-fpm-cache-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-cache-pvc
+        - name: php-fpm-maintenance-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-maintenance-pvc
+        - name: php-fpm-public-storage-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-public-storage-pvc
+        - name: php-fpm-private-storage-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-private-storage-pvc
