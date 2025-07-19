@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgre-statefulset
+  labels:
+    app: postgre
+spec:
+  selector:
+    matchLabels:
+      app: postgre
+  serviceName: "postgre"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgre
+    spec:
+      containers:
+      - name: postgre
+        image: docker.io/oroinc/pgsql:17.2-alpine
+        ports:
+        - containerPort: 5432
+          name: postgre
+        env:
+          - name: POSTGRES_ROOT_PASSWORD
+            value: "orodbpass"
+          - name: POSTGRES_DB
+            value: "orodb"
+          - name: POSTGRES_USER
+            value: "orodbuser"
+          - name: POSTGRES_PASSWORD
+            value: "orodbpass"
