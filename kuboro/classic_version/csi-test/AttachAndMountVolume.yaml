@@ -1,0 +1,22 @@
+# Attach and mount existing volume to a pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oro-pod
+  labels:
+    role: oro-pod
+spec:
+  containers:
+    - name: oro-pod
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: oro-pod
+          containerPort: 80
+          protocol: TCP
+  restartPolicy: OnFailure
+  volumes:
+    - name: oro-pod-volume
+      persistentVolumeClaim:
+        claimName: request-for-storage
+  
