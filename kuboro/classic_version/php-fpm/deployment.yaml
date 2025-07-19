@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php-fpm-app
+  name: orocommerce-app-php-fpm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: php-fpm-app
+      app: orocommerce-app-php-fpm
   template:
     metadata:
       labels:
-        app: php-fpm-app
+        app: orocommerce-app-php-fpm
     spec:
       containers:
         - name: orocommerce-app-php-fpm

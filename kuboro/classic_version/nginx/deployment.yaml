@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: oroinc/runtime:6.1-latest
+        ports:
+        - containerPort: 80
+        command: ["nginx"]
+        # securityContext:
+        #   runAsNonRoot: true
+        #   runAsUser: 2002
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 80
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 3
+        volumeMounts:
+          - name: nginx-pvc
+            mountPath: /opt/oro-nginx
+      initContainers:
+      - name: nginx-init
+        image: oroinc/orocommerce-application:6.1.0
+        command: 
+          - bash
+          - -c
+          - | 
+            /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf
+        volumeMounts:
+          - name: nginx-pvc
+            mountPath: /opt/oro-nginx
+      volumes:
+      - name: nginx-pvc
+        persistentVolumeClaim:
+          claimName: nginx-pvc
