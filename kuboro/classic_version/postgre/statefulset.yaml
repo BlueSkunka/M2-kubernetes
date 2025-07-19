@@ -16,17 +16,32 @@ spec:
         app: postgre
     spec:
       containers:
-      - name: postgre
-        image: docker.io/oroinc/pgsql:17.2-alpine
-        ports:
-        - containerPort: 5432
-          name: postgre
-        env:
-          - name: POSTGRES_ROOT_PASSWORD
-            value: "orodbpass"
-          - name: POSTGRES_DB
-            value: "orodb"
-          - name: POSTGRES_USER
-            value: "orodbuser"
-          - name: POSTGRES_PASSWORD
-            value: "orodbpass"
+        - name: postgre
+          image: docker.io/oroinc/pgsql:17.2-alpine
+          ports:
+          - containerPort: 5432
+            name: postgre
+          env:
+            - name: POSTGRES_ROOT_PASSWORD
+              value: "orodbpass"
+            - name: POSTGRES_DB
+              value: "orodb"
+            - name: POSTGRES_USER
+              value: "orodbuser"
+            - name: POSTGRES_PASSWORD
+              value: "orodbpass"
+          volumeMounts:
+            - name: postgre-pvc
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgre-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        volumeMode: Filesystem
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: local
+        
