@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-fpm
+  labels:
+    app: php-fpm
+spec:
+  ports:
+  - port: 9000
+    name: php-fpm
+  clusterIP: None
+  selector:
+    app: php-fpm
