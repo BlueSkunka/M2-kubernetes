@@ -6,7 +6,7 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOncePod
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local
   hostPath:
