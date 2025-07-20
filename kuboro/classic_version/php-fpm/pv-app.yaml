@@ -10,7 +10,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local
   hostPath:
-    path: /oro-php-fpm/app
+    path: /orocommerce/php-fpm/app
   claimRef:
     name: php-fpm-app-pvc
     namespace: default

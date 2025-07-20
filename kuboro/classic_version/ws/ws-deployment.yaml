@@ -21,23 +21,9 @@ spec:
         ports:
         - containerPort: 8080
           name: websocket
-        env:
-          - name: ORO_ENV
-            value: "prod"
-          - name: ORO_LOG_PATH
-            value: "php://stderr"
-          - name: ORO_DB_HOST
-            value: "postgre"
-          - name: ORO_DB_PORT
-            value: "5432"
-          - name: ORO_DB_NAME
-            value: "orodb"
-          - name: ORO_DB_USER
-            value: "orodbuser"
-          - name: ORO_DB_PASSWORD
-            value: "orodbpass"
-          - name: ORO_DB_DSN
-            value: "postgres://orodbuser:orodbpass@postgre:5432/orodb?sslmode=disable&charset=utf8&serverVersion=17.2"
+        envFrom:
+            - secretRef: 
+                name: orocommerce-secret
         volumeMounts:
         - name: php-fpm-app-pvc
           mountPath: /var/www/oro

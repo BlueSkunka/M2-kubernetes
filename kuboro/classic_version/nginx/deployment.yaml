@@ -20,15 +20,18 @@ spec:
         ports:
         - containerPort: 80
         args: ["nginx"]
+        envFrom:
+            - secretRef: 
+                name: orocommerce-secret
         securityContext:
           runAsNonRoot: true
           runAsUser: 2002
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 80
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 3
         volumeMounts:
           - name: nginx-pvc
             mountPath: /opt/oro-nginx
@@ -50,6 +53,9 @@ spec:
           - -c
           - | 
             /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf
+        envFrom:
+            - secretRef: 
+                name: orocommerce-secret
         volumeMounts:
           - name: nginx-pvc
             mountPath: /opt/oro-nginx

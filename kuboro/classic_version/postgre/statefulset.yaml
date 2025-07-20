@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: orocommerce-db
-  serviceName: "orocommerce-db"
+  serviceName: orocommerce-db
   replicas: 1
   template:
     metadata:
