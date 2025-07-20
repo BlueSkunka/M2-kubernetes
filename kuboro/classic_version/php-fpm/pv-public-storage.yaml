@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: php-fpm-public-storage-pv
+  labels:
+    name: php-fpm-public-storage-pv
 spec:
   capacity:
     storage: 10Gi
@@ -11,6 +13,3 @@ spec:
   storageClassName: local
   hostPath:
     path: /orocommerce/php-fpm/media
-  claimRef:
-    name: php-fpm-public-storage-pvc
-    namespace: default

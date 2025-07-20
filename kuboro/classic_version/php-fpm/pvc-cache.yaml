@@ -10,3 +10,6 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: local
+  selector:
+    matchLabels:
+      name: php-fpm-cache-pv
