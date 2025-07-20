@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgre-statefulset
+  name: orocommerce-db
   labels:
-    app: postgre
+    app: orocommerce-db
 spec:
   selector:
     matchLabels:
-      app: postgre
-  serviceName: "postgre"
+      app: orocommerce-db
+  serviceName: "orocommerce-db"
   replicas: 1
   template:
     metadata:
       labels:
-        app: postgre
+        app: orocommerce-db
     spec:
       containers:
         - name: postgre
@@ -38,7 +38,7 @@ spec:
               command:
               - /bin/sh
               - -c
-              - exec pg_isready
+              - exec pg_isready -U orodbuser -d orodb
             failureThreshold: 6
             initialDelaySeconds: 60
             periodSeconds: 10
@@ -51,7 +51,7 @@ spec:
               - -c
               - -e
               - |
-                exec pg_isready
+                exec pg_isready -U orodbuser -d orodb
             failureThreshold: 6
             initialDelaySeconds: 60
             periodSeconds: 10
