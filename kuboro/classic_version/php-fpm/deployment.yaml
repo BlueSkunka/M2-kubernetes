@@ -59,25 +59,6 @@ spec:
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
-          # env:
-          #   - name: ORO_ENV
-          #     value: "prod"
-          #   - name: ORO_DB_HOST
-          #     value: "orocommerce-db"
-          #   - name: ORO_DB_PORT
-          #     value: "5432"
-          #   - name: ORO_DB_NAME
-          #     value: "orodb"
-          #   - name: ORO_DB_USER
-          #     value: "orodbuser"
-          #   - name: orodbpass
-          #     value: "orodbuser"
-          #   - name: ORO_DB_DSN
-          #     value: "postgres://orodbuser:orodbpass@orocommerce-db:5432/orodb?sslmode=disable&charset=utf8&serverVersion=17.2"
-          #   - name: ORO_DB_ROOT_USER
-          #     value: "orodbuser"
-          #   - name: ORO_DB_ROOT_PASSWORD
-          #     value: "orodbpass"
           volumeMounts:
           - name: php-fpm-app-pvc
             mountPath: /var/www/oro

@@ -1,29 +1,35 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: orocommerce-consumer
+  name: orocommerce-cron
   labels:
-    app: orocommerce-consumer
+    app: orocommerce-cron
 spec:
   selector:
     matchLabels:
-      app: orocommerce-consumer
+      app: orocommerce-cron
   serviceName: orocommerce-app-php-fpm
   replicas: 1
   template:
     metadata:
       labels:
-        app: orocommerce-consumer
+        app: orocommerce-cron
     spec:
       containers:
-        - name: consumer
+        - name: cron
           image: oroinc/runtime:6.1-latest
-          args: ["consumer"]
+          args: ["cron"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 2002
+            runAsGroup: 2001
           volumeMounts:
             - name: php-fpm-app-pvc
               mountPath: /var/www/oro
             - name: php-fpm-cache-pvc
               mountPath: /var/www/oro/var/cache
+            - name: php-fpm-multihost-operation-pvc
+              mountPath: /var/www/oro/var/multihost
             - name: php-fpm-maintenance-pvc
               mountPath: /var/www/oro/var/maintenance
             - name: php-fpm-public-storage-pvc
@@ -40,6 +46,9 @@ spec:
         - name: php-fpm-cache-pvc
           persistentVolumeClaim:
             claimName: php-fpm-cache-pvc
+        - name: php-fpm-multihost-operation-pvc
+          persistentVolumeClaim:
+            claimName: php-fpm-multihost-operation-pvc
         - name: php-fpm-maintenance-pvc
           persistentVolumeClaim:
             claimName: php-fpm-maintenance-pvc
