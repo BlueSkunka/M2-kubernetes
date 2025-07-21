@@ -5,6 +5,7 @@ metadata:
   name: oro-pod
   labels:
     role: oro-pod
+  namespace: orocommerce
 spec:
   containers:
     - name: oro-pod

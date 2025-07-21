@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: orocommerce-app-php-fpm
+  namespace: orocommerce
 spec:
   selector:
     app: orocommerce-app-php-fpm

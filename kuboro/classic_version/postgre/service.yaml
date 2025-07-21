@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-db
   labels:
     app: orocommerce-db
+  namespace: orocommerce
 spec:
   ports:
   - port: 5432

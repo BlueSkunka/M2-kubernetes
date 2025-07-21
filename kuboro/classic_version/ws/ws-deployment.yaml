@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-websocket
   labels:
     app: orocommerce-websocket
+  namespace: orocommerce
 spec:
   replicas: 1
   selector:

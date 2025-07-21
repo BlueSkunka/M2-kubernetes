@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-cron
   labels:
     app: orocommerce-cron
+  namespace: orocommerce
 spec:
   selector:
     matchLabels:

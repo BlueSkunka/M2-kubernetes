@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-nginx
   labels:
     app: orocommerce-nginx
+  namespace: orocommerce
 spec:
   ports:
   - protocol: TCP
