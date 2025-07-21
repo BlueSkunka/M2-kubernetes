@@ -14,6 +14,9 @@ spec:
       labels:
         app: websocket
     spec:
+      securityContext:
+        runAsUser: 2002
+        runAsGroup: 2001
       containers:
       - name: websocket
         image: oroinc/runtime:6.1-latest
@@ -27,27 +30,7 @@ spec:
         volumeMounts:
         - name: php-fpm-app-pvc
           mountPath: /var/www/oro
-        - name: php-fpm-cache-pvc
-          mountPath: /var/www/oro/var/cache
-        - name: php-fpm-maintenance-pvc
-          mountPath: /var/www/oro/var/maintenance
-        - name: php-fpm-public-storage-pvc
-          mountPath: /var/www/oro/public/media
-        - name: php-fpm-private-storage-pvc
-          mountPath: /var/www/oro/var/data
       volumes:
       - name: php-fpm-app-pvc
         persistentVolumeClaim:
           claimName: php-fpm-app-pvc
-      - name: php-fpm-cache-pvc
-        persistentVolumeClaim:
-          claimName: php-fpm-cache-pvc
-      - name: php-fpm-maintenance-pvc
-        persistentVolumeClaim:
-          claimName: php-fpm-maintenance-pvc
-      - name: php-fpm-public-storage-pvc
-        persistentVolumeClaim:
-          claimName: php-fpm-public-storage-pvc
-      - name: php-fpm-private-storage-pvc
-        persistentVolumeClaim:
-          claimName: php-fpm-private-storage-pvc

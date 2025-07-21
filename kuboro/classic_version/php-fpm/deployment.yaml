@@ -12,80 +12,47 @@ spec:
       labels:
         app: orocommerce-app-php-fpm
     spec:
+      securityContext:
+        runAsUser: 2002
+        runAsGroup: 2001
       containers:
         - name: orocommerce-app-php-fpm
           image: oroinc/runtime:6.1-latest
           args: ["php-fpm"]
+          env:
+            - name: ORO_LOG_PATH
+              value: php://stderr
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
           ports:
             - containerPort: 9000
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 2002
           volumeMounts:
             - name: php-fpm-app-pvc
               mountPath: /var/www/oro
-            - name: php-fpm-cache-pvc
-              mountPath: /var/www/oro/var/cache
-            - name: php-fpm-multihost-operation-pvc
-              mountPath: /var/www/oro/var/multihost
-            - name: php-fpm-maintenance-pvc
-              mountPath: /var/www/oro/var/maintenance
-            - name: php-fpm-public-storage-pvc
-              mountPath: /var/www/oro/public/media
-            - name: php-fpm-private-storage-pvc
-              mountPath: /var/www/oro/var/data
             - name: tmp
               mountPath: /tmp
       initContainers:
         - name: volume-init
           image: oroinc/orocommerce-application:6.1.0
-          securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
-          command: ["/bin/sh"]
-          args: ["-c", "cp -r /var/www/oro/. /data && chown -R www-data /var/www/oro"]
+          args: ["-c", "cp -rp /var/www/oro/. /data"]
           volumeMounts:
           - name: php-fpm-app-pvc
             mountPath: /data
+          securityContext:
+            runAsUser: 0
         - name: restore
           image: oroinc/orocommerce-application-init-fr:6.1.0
           args: ["restore"]
-          securityContext:
-            runAsNonRoot: false
-            runAsUser: 0
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
           volumeMounts:
           - name: php-fpm-app-pvc
             mountPath: /var/www/oro
-          - name: php-fpm-cache-pvc
-            mountPath: /var/www/oro/var/cache
-          - name: php-fpm-public-storage-pvc
-            mountPath: /var/www/oro/public/media
-          - name: php-fpm-private-storage-pvc
-            mountPath: /var/www/oro/var/data
       volumes:
         - name: php-fpm-app-pvc
           persistentVolumeClaim:
             claimName: php-fpm-app-pvc
-        - name: php-fpm-cache-pvc
-          persistentVolumeClaim:
-            claimName: php-fpm-cache-pvc
-        - name: php-fpm-multihost-operation-pvc
-          persistentVolumeClaim:
-            claimName: php-fpm-multihost-operation-pvc
-        - name: php-fpm-maintenance-pvc
-          persistentVolumeClaim:
-            claimName: php-fpm-maintenance-pvc
-        - name: php-fpm-public-storage-pvc
-          persistentVolumeClaim:
-            claimName: php-fpm-public-storage-pvc
-        - name: php-fpm-private-storage-pvc
-          persistentVolumeClaim:
-            claimName: php-fpm-private-storage-pvc
         - name: tmp
           emptyDir: {}
