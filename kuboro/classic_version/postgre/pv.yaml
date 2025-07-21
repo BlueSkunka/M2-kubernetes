@@ -4,6 +4,7 @@ metadata:
   name: postgre-pv
   labels:
     name: postgre-pv
+  namespace: orocommerce
 spec:
   capacity:
     storage: 10Gi
