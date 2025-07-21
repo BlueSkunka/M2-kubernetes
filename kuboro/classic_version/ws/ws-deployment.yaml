@@ -1,29 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: websocket-deployment
+  name: orocommerce-websocket
   labels:
-    app: websocket
+    app: orocommerce-websocket
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: websocket
+      app: orocommerce-websocket
   template:
     metadata:
       labels:
-        app: websocket
+        app: orocommerce-websocket
     spec:
       securityContext:
         runAsUser: 2002
         runAsGroup: 2001
       containers:
-      - name: websocket
+      - name: orocommerce-websocket
         image: oroinc/runtime:6.1-latest
         args: ["websocket"]
         ports:
         - containerPort: 8080
-          name: websocket
         envFrom:
             - secretRef: 
                 name: orocommerce-secret
