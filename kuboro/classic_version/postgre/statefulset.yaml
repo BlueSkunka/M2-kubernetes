@@ -63,10 +63,13 @@ spec:
         name: postgre-pvc
       spec:
         accessModes:
-          - ReadWriteOnce
+          - ReadWriteOncePod
         volumeMode: Filesystem
         resources:
           requests:
             storage: 5Gi
         storageClassName: local
+        selector:
+          matchLabels:
+            name: postgre-pv
         
