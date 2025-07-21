@@ -44,8 +44,8 @@ OPTIONNEL: - Application **fonctionnelle** en haute disponibilité
 - **Frontend** : Nginx (Deployment + Service)
 - **Backend** : PHP-FPM (Deployment + HPA)
 - **Database** : Postgresql (StatefulSet + PVC)
-- **Cache** : Redis (StatefulSet)
-- **Search** : Elasticsearch (StatefulSet)
+- ~~**Cache** : Redis (StatefulSet)~~
+- ~~**Search** : Elasticsearch (StatefulSet)~~
 - **Monitoring** : Prometheus + Grafana
 
 ---
