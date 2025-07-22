@@ -12,7 +12,7 @@ spec:
     - ReadWriteOncePod
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
-  local:
+  hostPath:
     path: /orocommerce/postgre
   nodeAffinity:
     required:

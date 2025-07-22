@@ -13,7 +13,7 @@ spec:
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
-  local:
+  hostPath:
     path: /orocommerce/php-fpm/cache
   nodeAffinity:
     required:
