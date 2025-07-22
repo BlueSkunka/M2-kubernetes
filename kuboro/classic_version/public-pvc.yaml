@@ -11,7 +11,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local
+  storageClassName: local-storage
   selector:
     matchLabels:
       name: php-fpm-public-pv
