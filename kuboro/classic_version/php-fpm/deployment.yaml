@@ -28,6 +28,15 @@ spec:
                 name: orocommerce-secret
           ports:
             - containerPort: 9000
+          livenessProbe:
+            exec:
+                command:
+                    - /bin/sh
+                    - -c
+                    - php-fpm-healthcheck
+            periodSeconds: 5
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
           volumeMounts:
             - name: php-fpm-app-pvc
               mountPath: /var/www/oro

@@ -10,6 +10,6 @@ spec:
   accessModes:
     - ReadWriteOncePod
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local
+  storageClassName: local-storage
   hostPath:
     path: /orocommerce/nginx
