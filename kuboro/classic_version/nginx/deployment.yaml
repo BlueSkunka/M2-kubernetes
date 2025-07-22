@@ -30,8 +30,16 @@ spec:
           httpGet:
             path: /
             port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 3
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 30
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 30
         volumeMounts:
           - name: nginx-pvc
             mountPath: /opt/oro-nginx
@@ -40,11 +48,7 @@ spec:
       initContainers:
       - name: nginx-init
         image: oroinc/orocommerce-application:6.1.0
-        command: 
-          - bash
-          - -c
-          - | 
-            /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf
+        command: ["sh", "-c", "until nc -z orocommerce-app-php-fpm 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"]
         envFrom:
             - secretRef: 
                 name: orocommerce-secret
