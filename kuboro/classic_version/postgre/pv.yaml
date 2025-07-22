@@ -11,6 +11,14 @@ spec:
   accessModes:
     - ReadWriteOncePod
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local
-  hostPath:
+  storageClassName: local-storage
+  local:
     path: /orocommerce/postgre
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube

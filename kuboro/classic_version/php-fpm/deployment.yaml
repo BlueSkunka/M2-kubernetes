@@ -64,16 +64,16 @@ spec:
       initContainers:
         - name: volume-init
           image: oroinc/orocommerce-application:6.1.0
-          args: ["-c", "cp -rp /var/www/oro/. /data && cp -rp /var/www/oro/var/cache /cache && cp -rp /var/www/oro/public/media /public && cp -rp /var/www/oro/var/data /private"]
+          args: ["-c", "cp -rp /var/www/oro/. /data"]
           volumeMounts:
           - name: php-fpm-app-pvc
             mountPath: /data
           - name: php-fpm-cache-pvc
-            mountPath: /cache
+            mountPath: /data/cache
           - name: php-fpm-public-pvc
-            mountPath: /public
+            mountPath: /data/public
           - name: php-fpm-private-pvc
-            mountPath: /private
+            mountPath: /data/private
           securityContext:
             runAsUser: 0
         - name: restore

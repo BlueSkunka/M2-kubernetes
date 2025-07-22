@@ -68,7 +68,7 @@ spec:
         resources:
           requests:
             storage: 5Gi
-        storageClassName: local
+        storageClassName: local-storage
         selector:
           matchLabels:
             name: postgre-pv

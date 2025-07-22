@@ -12,6 +12,14 @@ spec:
     - ReadWriteMany
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local
-  hostPath:
+  storageClassName: local-storage
+  local:
     path: /orocommerce/php-fpm/cache
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube
