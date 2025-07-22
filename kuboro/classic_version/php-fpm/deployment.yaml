@@ -78,7 +78,7 @@ spec:
             runAsUser: 0
         - name: restore
           image: oroinc/orocommerce-application-init-fr:6.1.0
-          args: ["restore"]
+          command: ["sh", "-c", "until nc -z orocommerce-db 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore"]
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
