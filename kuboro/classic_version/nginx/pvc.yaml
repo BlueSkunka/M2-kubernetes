@@ -12,5 +12,5 @@ spec:
       storage: 10Gi
   storageClassName: local-storage
   selector:
-          matchLabels:
-            name: nginx-pv
+    matchLabels:
+      name: nginx-pv
