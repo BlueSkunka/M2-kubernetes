@@ -4,7 +4,7 @@ metadata:
   name: orocommerce-app-php-fpm
   namespace: orocommerce
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: orocommerce-app-php-fpm
@@ -37,6 +37,13 @@ spec:
             periodSeconds: 5
             initialDelaySeconds: 15
             timeoutSeconds: 30
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+            # limits:
+            #   memory: "300Mi"
+            #   cpu: "300m"
           volumeMounts:
             - name: php-fpm-app-pvc
               mountPath: /var/www/oro

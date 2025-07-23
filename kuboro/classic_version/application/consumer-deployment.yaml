@@ -4,7 +4,7 @@ metadata:
   name: orocommerce-consumer
   namespace: orocommerce
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: orocommerce-consumer
