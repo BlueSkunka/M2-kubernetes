@@ -5,7 +5,7 @@ metadata:
   namespace: orocommerce
 spec:
   accessModes:
-    - ReadWriteOncePod
+    - ReadWriteOnce
   volumeMode: Filesystem
   resources:
     requests:
