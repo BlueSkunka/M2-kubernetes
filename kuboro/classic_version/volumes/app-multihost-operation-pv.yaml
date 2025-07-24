@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: php-fpm-cache-pv
-  labels:
-    name: php-fpm-cache-pv
+  name: orocommerce-app-multihost-operation-pv
   namespace: orocommerce
+  labels:
+    name: orocommerce-app-multihost-operation-pv
 spec:
   capacity:
     storage: 10Gi
@@ -14,7 +14,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   hostPath:
-    path: /orocommerce/php-fpm/cache
+    path: /orocommerce/multihost-operation
   nodeAffinity:
     required:
       nodeSelectorTerms:

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orocommerce-cron
+  name: orocommerce-app-cron
   namespace: orocommerce
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: orocommerce-cron
+      app: orocommerce-app-cron
   template:
     metadata:
       labels:
-        app: orocommerce-cron
+        app: orocommerce-app-cron
     spec:
       securityContext:
         runAsUser: 0
       initContainers:
         - name: verify-connection
           image: oroinc/orocommerce-application-init-fr:6.1.0
-          command: ["sh", "-c", "until nc -z orocommerce-app-php-fpm 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"]
+          command: ["sh", "-c", "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"]
       containers:
         - name: cron
           image: oroinc/runtime:6.1-latest
@@ -30,40 +30,40 @@ spec:
             - secretRef: 
                 name: orocommerce-secret
           volumeMounts:
-            - name: php-fpm-app-pvc
+            - name: orocommerce-app-pvc
               mountPath: /var/www/oro
-            - name: php-fpm-cache-pvc
+            - name: orocommerce-app-cache-pvc
               mountPath: /var/www/oro/var/cache
-            - name: php-fpm-multihost-operation-pvc
+            - name: orocommerce-app-multihost-operation-pvc
               mountPath: /var/www/oro/var/multihost
-            - name: php-fpm-maintenance-pvc
+            - name: orocommerce-app-maintenance-pvc
               mountPath: /var/www/oro/var/maintenance
-            - name: php-fpm-public-pvc
+            - name: orocommerce-app-public-pvc
               mountPath: /var/www/oro/public/media
-            - name: php-fpm-private-pvc
+            - name: orocommerce-app-private-pvc
               mountPath: /var/www/oro/var/data
       volumes:
-        - name: php-fpm-app-pvc
+        - name: orocommerce-app-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-app-pvc
+            claimName: orocommerce-app-pvc
             readOnly: false
-        - name: php-fpm-cache-pvc
+        - name: orocommerce-app-cache-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-cache-pvc
+            claimName: orocommerce-app-cache-pvc
             readOnly: false
-        - name: php-fpm-multihost-operation-pvc
+        - name: orocommerce-app-multihost-operation-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-multihost-operation-pvc
+            claimName: orocommerce-app-multihost-operation-pvc
             readOnly: false
-        - name: php-fpm-maintenance-pvc
+        - name: orocommerce-app-maintenance-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-maintenance-pvc
+            claimName: orocommerce-app-maintenance-pvc
             readOnly: false
-        - name: php-fpm-public-pvc
+        - name: orocommerce-app-public-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-public-pvc
+            claimName: orocommerce-app-public-pvc
             readOnly: false
-        - name: php-fpm-private-pvc
+        - name: orocommerce-app-private-pvc
           persistentVolumeClaim:
-            claimName: php-fpm-private-pvc
+            claimName: orocommerce-app-private-pvc
             readOnly: false

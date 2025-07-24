@@ -1,4 +1,4 @@
-#! consumer-deployment.yaml
+#! app-consumer-deployment.yaml
 # Generated code, do not edit
 apiVersion: apps/v1
 kind: Deployment

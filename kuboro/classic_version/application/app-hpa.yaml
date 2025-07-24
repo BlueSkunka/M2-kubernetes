@@ -1,15 +1,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: orocommerce-app-php-fpm-hpa
+  name: orocommerce-app-hpa
   namespace: orocommerce
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: orocommerce-app-php-fpm
+    name: orocommerce-app
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 2
   metrics:
   - type: Resource
     resource:

@@ -6,13 +6,13 @@ resources:
     - 0-dockoro-namespace.yaml
     - application-deployment.yaml
     - consumer-cache-persistentVolumeClaim.yaml
-    - consumer-deployment.yaml
+    - app-consumer-deployment.yaml
     - consumer-maintenance_folder-persistentVolumeClaim.yaml
     - consumer-oro_app-persistentVolumeClaim.yaml
     - consumer-private_storage-persistentVolumeClaim.yaml
     - consumer-public_storage-persistentVolumeClaim.yaml
     - cron-cache-persistentVolumeClaim.yaml
-    - cron-deployment.yaml
+    - app-cron-deployment.yaml
     - cron-maintenance_folder-persistentVolumeClaim.yaml
     - cron-multihost_operation_folder-persistentVolumeClaim.yaml
     - cron-oro_app-persistentVolumeClaim.yaml
@@ -54,7 +54,7 @@ resources:
     - web-public_storage-persistentVolumeClaim.yaml
     - web-service.yaml
     - ws-cache-persistentVolumeClaim.yaml
-    - ws-deployment.yaml
+    - websocket-deployment.yaml
     - ws-maintenance_folder-persistentVolumeClaim.yaml
     - ws-oro_app-persistentVolumeClaim.yaml
     - ws-private_storage-persistentVolumeClaim.yaml

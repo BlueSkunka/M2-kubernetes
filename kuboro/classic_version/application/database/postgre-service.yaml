@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: orocommerce-db
+  name: orocommerce-postgre
   labels:
-    app: orocommerce-db
+    app: orocommerce-postgre
   namespace: orocommerce
 spec:
   ports:
@@ -11,4 +11,4 @@ spec:
     name: postgre
     targetPort: 5432
   selector:
-    app: orocommerce-db
+    app: orocommerce-postgre

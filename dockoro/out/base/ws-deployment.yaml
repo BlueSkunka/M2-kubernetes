@@ -1,4 +1,4 @@
-#! ws-deployment.yaml
+#! websocket-deployment.yaml
 # Generated code, do not edit
 apiVersion: apps/v1
 kind: Deployment

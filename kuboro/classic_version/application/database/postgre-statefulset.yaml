@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: orocommerce-db
+  name: orocommerce-postgre
   labels:
-    app: orocommerce-db
+    app: orocommerce-postgre
   namespace: orocommerce
 spec:
   selector:
     matchLabels:
-      app: orocommerce-db
-  serviceName: orocommerce-db
+      app: orocommerce-postgre
+  serviceName: orocommerce-postgre
   replicas: 1
   template:
     metadata:
       labels:
-        app: orocommerce-db
+        app: orocommerce-postgre
     spec:
       containers:
         - name: postgre
@@ -32,7 +32,7 @@ spec:
             - name: POSTGRES_PASSWORD
               value: "orodbpass"
           volumeMounts:
-            - name: postgre-pvc
+            - name: orocommerce-postgre-pvc
               mountPath: /var/lib/postgresql/data
           livenessProbe:
             exec:
@@ -60,7 +60,7 @@ spec:
             timeoutSeconds: 5
   volumeClaimTemplates:
     - metadata:
-        name: postgre-pvc
+        name: orocommerce-postgre-pvc
       spec:
         accessModes:
           - ReadWriteOncePod
@@ -71,5 +71,5 @@ spec:
         storageClassName: local-storage
         selector:
           matchLabels:
-            name: postgre-pv
+            name: orocommerce-postgre-pv
         
