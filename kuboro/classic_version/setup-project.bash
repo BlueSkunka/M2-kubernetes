@@ -1,6 +1,7 @@
 #!/bin/bash
 
 kubectl apply -f ./init
+kubectl apply -f ./tls
 kubectl apply -f ./volumes
 kubectl apply -f ./application/database
 kubectl apply -f ./application/restore-job.yaml
