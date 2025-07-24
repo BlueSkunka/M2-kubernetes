@@ -23,4 +23,3 @@ spec:
               operator: In
               values:
                 - minikube
-                - docker-desktop
