@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-exporter
+  labels:
+    app: postgres-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-exporter
+  template:
+    metadata:
+      name: postgres-exporter
+      labels:
+        app: postgres-exporter
+    spec:
+      containers:
+        - name: postgres-exporter
+          image: wrouesnel/postgres_exporter
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9187
+              protocol: TCP
+          env:
+            - name: DATA_SOURCE_NAME
+              value: "orodbuser:orodbpass@tcp(postgres:5432)/orodb"
+      restartPolicy: Always
+      

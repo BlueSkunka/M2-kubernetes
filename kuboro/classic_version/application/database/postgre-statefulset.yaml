@@ -68,7 +68,7 @@ spec:
         resources:
           requests:
             storage: 5Gi
-        storageClassName: local-storage
+        storageClassName: nfs-csi
         selector:
           matchLabels:
             name: orocommerce-postgre-pv

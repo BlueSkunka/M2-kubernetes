@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres-monitor
+  labels:
+    app: postgre
+spec:
+  selector:
+    matchLabels:
+      app: postgre
+  endpoints:
+    - port: postgre
+      interval: 30s
+      path: /metrics

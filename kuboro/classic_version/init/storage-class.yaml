@@ -1,7 +1,14 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner # indicates that this StorageClass does not support automatic provisioning
-volumeBindingMode: WaitForFirstConsumer
+  name: nfs-csi
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: "nfs.csi.k8s.io"
+  share: /orocommerce
+  csi.storage.k8s.io/provisioner-secret-namespace: "orocommerce"
+volumeBindingMode: Immediate
 reclaimPolicy: Retain
+allowVolumeExpansion: false
+mountOptions:
+  - nfsvers=4.1

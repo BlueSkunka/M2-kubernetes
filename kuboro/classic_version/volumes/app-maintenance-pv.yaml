@@ -12,7 +12,7 @@ spec:
     - ReadWriteMany
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
+  storageClassName: nfs-csi
   hostPath:
     path: /orocommerce/maintenance
   nodeAffinity:

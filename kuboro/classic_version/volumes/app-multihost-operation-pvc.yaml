@@ -11,7 +11,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local-storage
+  storageClassName: nfs-csi
   selector:
     matchLabels:
       name: orocommerce-app-multihost-operation-pv

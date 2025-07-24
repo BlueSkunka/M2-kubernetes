@@ -44,7 +44,7 @@ services:
     env_file: .env
     volumes:
       - oro_app:/var/www/oro
- 
+        
   web-init:
     image: $ORO_IMAGE:$ORO_IMAGE_TAG
     command:
