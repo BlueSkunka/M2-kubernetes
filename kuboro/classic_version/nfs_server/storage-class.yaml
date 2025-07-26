@@ -2,9 +2,10 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: nfs-csi
+  namespace: orocommerce
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: nfs-server.default.svc.cluster.local
+  server: nfs-server.orocommerce.svc.cluster.local
   share: /orocommerce
   csi.storage.k8s.io/provisioner-secret-namespace: "orocommerce"
 volumeBindingMode: Immediate

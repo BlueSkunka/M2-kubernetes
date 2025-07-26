@@ -17,7 +17,7 @@ spec:
     driver: nfs.csi.k8s.io
     # volumeHandle format: {nfs-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: nfs-server.default.svc.cluster.local/share##
+    volumeHandle: nfs-server.orocommerce.svc.cluster.local#orocommerce#/orocommerce/maintenance
     volumeAttributes:
-      server: nfs-server.default.svc.cluster.local
+      server: nfs-server.orocommerce.svc.cluster.local
       share: /orocommerce/maintenance
