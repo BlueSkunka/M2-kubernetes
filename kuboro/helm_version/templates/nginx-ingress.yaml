@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  ingressClassName: {{ default "nginx" .Values.nginx.ingressClass }}
+  tls:
+    - hosts:
+        - {{ default "oro-demo" .Values.nginx.ingressHost }}
+      secretName: {{ .Release.Name }}-tls
+  rules:
+  - host: {{ default "oro-demo" .Values.nginx.ingressHost }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-nginx
+            port:
+              number: 80

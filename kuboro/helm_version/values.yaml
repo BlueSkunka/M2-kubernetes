@@ -116,9 +116,8 @@ cron:
 
 app:
   defaultContainerName: orocommerce-app
-  defaultContainerArgs: ["php-fpm"]
-  defaultContainerPorts:
-    - containerPort: 9000
+  defaultContainerArgs:
+    - php-fpm
   defaultLivenessProbe:
     exec:
       command:
@@ -141,33 +140,41 @@ app:
 
 nginx:
   initContainerName: ngnix-init
-  initContainerCommand: ["sh", "-c", "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"]
+  initContainerCommand: 
+    - sh
+    - -c
+    - until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf
   defaultContainerName: nginx
-  defaultContainerArgs: ["nginx"]
+  defaultContainerArgs: 
+    - nginx
   defaultContainerPorts:
     - containerPort: 80
-  livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 30
-  startupProbe:
+  defaultLivenessProbe:
     httpGet:
       path: /
       port: 80
     initialDelaySeconds: 15
     periodSeconds: 5
     timeoutSeconds: 30
-
-ingressHost: oro.demo
+  defaultStartupProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 30
+  ingressClass: nginx
+  ingressHost: oro.demo
 
 websocket:
-  initContainerName: ngnix-init
-  initContainerCommand: ["sh", "-c", "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"]
+  initContainerName: verify-connection
+  initContainerCommand: 
+    - sh 
+    - -c
+    - "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"
   defaultContainerName: websocket
-  defaultContainerArgs: ["websocket"]
+  defaultContainerArgs: 
+   - "websocket"
   defaultContainerPorts:
     - containerPort: 8080
 

@@ -1,34 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-app-cron
+  name: {{ .Release.Name }}-app
   namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-app-cron
+      app: {{ .Release.Name }}-app
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-app-cron
+        app: {{ .Release.Name }}-app
     spec:
       securityContext:
-        {{- with .Values.rootSecurityContext }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      initContainers:
-        - name: {{ default "verify-connection" .Values.cron.initContainerName }}
-          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
-          command: 
-            {{- with .Values.cron.initContainerCommand }}
-            {{- toYaml . | nindent 12 }}
+        {{- with .Values.appSecurityContext }}
+            {{- toYaml . | nindent 10 }}
             {{- end }}
       containers:
-        - name: {{ default "verify-connection" .Values.cron.defaultContainerName }}
+        - name: {{ default "orocommerce-app" .Values.app.defaultContainerName }}
           image: {{ .Values.images.oroImageBaseRuntime }}:{{ .Values.images.oroImageBaseRuntimeTag }}
           args: 
-            {{- with .Values.cron.defaultContainerArgs }}
+            {{- with .Values.app.defaultContainerArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
@@ -37,6 +30,16 @@ spec:
           envFrom:
             - secretRef: 
                 name: {{ .Release.Name }}-secret
+          ports:
+            - containerPort: 9000
+          livenessProbe:
+            {{- with .Values.app.defaultLivenessProbe }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- with .Values.app.defaultContainerResource }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumeMounts:
             - name: {{ .Release.Name }}-app-pvc
               mountPath: /var/www/oro
@@ -50,6 +53,8 @@ spec:
               mountPath: /var/www/oro/public/media
             - name: {{ .Release.Name }}-app-private-pvc
               mountPath: /var/www/oro/var/data
+            - name: tmp
+              mountPath: /tmp
       volumes:
         - name: {{ .Release.Name }}-app-pvc
           persistentVolumeClaim:
@@ -75,3 +80,5 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-app-private-pvc
             readOnly: false
+        - name: tmp
+          emptyDir: {}

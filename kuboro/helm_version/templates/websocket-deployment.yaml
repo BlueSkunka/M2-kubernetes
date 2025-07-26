@@ -1,56 +1,52 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-app-restore-job
-  namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "0"
-    "helm.sh/hook-delete-policy": hook-succeeded
+  name: {{ .Release.Name }}-websocket
+  labels:
+    app: {{ .Release.Name }}-websocket
+  namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
-  ttlSecondsAfterFinished: 100
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-websocket
   template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-websocket
     spec:
+      securityContext:
+        {{- with .Values.appSecurityContext }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       initContainers:
-        - name: {{ .Values.restore.initContainerName }}
-          image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
-          args: 
-            {{- with .Values.restore.initContainerArgs }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          volumeMounts:
-          - name: {{ .Release.Name }}-app-pvc
-            mountPath: /data
-          - name: {{ .Release.Name }}-app-cache-pvc
-            mountPath: /data/var/cache
-          - name: {{ .Release.Name }}-app-public-pvc
-            mountPath: /data/public/media
-          - name: {{ .Release.Name }}-app-private-pvc
-            mountPath: /data/var/private
-          securityContext:
-            {{- with .Values.rootSecurityContext }}
+        - name: {{ default "verify-connection" .Values.websocket.initContainerName }}
+          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+          command: 
+            {{- with .Values.nginx.initContainerCommand }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
       containers:
-        - name: {{ .Values.restore.defaultContainerName }}
-          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
-          command: 
-            {{- with .Values.restore.defaultContainerCommand }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          envFrom:
+      - name: {{ default "orocommerce-connection" .Values.websocket.defaultContainerName }}
+        image: {{ .Values.images.oroImageBaseRuntime }}:{{ .Values.images.oroImageBaseRuntimeTag }}
+        args: 
+          - "websocket"
+        ports:
+        - containerPort: 8080
+        envFrom:
             - secretRef: 
                 name: {{ .Release.Name }}-secret
-          volumeMounts:
+        volumeMounts:
           - name: {{ .Release.Name }}-app-pvc
             mountPath: /var/www/oro
           - name: {{ .Release.Name }}-app-cache-pvc
             mountPath: /var/www/oro/var/cache
+          - name: {{ .Release.Name }}-app-maintenance-pvc
+            mountPath: /var/www/oro/var/maintenance
           - name: {{ .Release.Name }}-app-public-pvc
             mountPath: /var/www/oro/public/media
           - name: {{ .Release.Name }}-app-private-pvc
             mountPath: /var/www/oro/var/data
-      restartPolicy: Never
       volumes:
         - name: {{ .Release.Name }}-app-pvc
           persistentVolumeClaim:
@@ -59,6 +55,10 @@ spec:
         - name: {{ .Release.Name }}-app-cache-pvc
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-maintenance-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-maintenance-pvc
             readOnly: false
         - name: {{ .Release.Name }}-app-public-pvc
           persistentVolumeClaim:
