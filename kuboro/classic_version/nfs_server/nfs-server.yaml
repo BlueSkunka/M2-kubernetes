@@ -47,6 +47,8 @@ spec:
               name: nfs-vol
           securityContext:
             privileged: true
+            capabilities:
+              add: [ "SYS_ADMIN", "SETPCAP" ]
           ports:
             - name: tcp-2049
               containerPort: 2049
