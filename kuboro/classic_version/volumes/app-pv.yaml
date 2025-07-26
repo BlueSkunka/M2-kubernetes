@@ -13,13 +13,11 @@ spec:
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-csi
-  hostPath:
-    path: /orocommerce/app
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - minikube
+  csi:
+    driver: nfs.csi.k8s.io
+    # volumeHandle format: {nfs-server-address}#{sub-dir-name}#{share-name}
+    # make sure this value is unique for every share in the cluster
+    volumeHandle: nfs-server.default.svc.cluster.local/share##
+    volumeAttributes:
+      server: nfs-server.default.svc.cluster.local
+      share: /orocommerce/app

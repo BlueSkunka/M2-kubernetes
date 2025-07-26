@@ -4,7 +4,7 @@ metadata:
   name: nfs-csi
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: "nfs.csi.k8s.io"
+  server: nfs-server.default.svc.cluster.local
   share: /orocommerce
   csi.storage.k8s.io/provisioner-secret-namespace: "orocommerce"
 volumeBindingMode: Immediate
