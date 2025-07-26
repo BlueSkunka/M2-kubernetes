@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-app-restore-job
   namespace: orocommerce
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       initContainers:

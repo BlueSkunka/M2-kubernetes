@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app-cron
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app-cron
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app-cron
+    spec:
+      securityContext:
+        {{- with .Values.rootSecurityContext }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      initContainers:
+        - name: {{ default "verify-connection" .Values.cron.initContainerName }}
+          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+          command: 
+            {{- with .Values.cron.initContainerCommand }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: cron
+          image: oroinc/runtime:6.1-latest
+          args: ["cron"]
+          env:
+            - name: ORO_LOG_PATH
+              value: php://stderr
+          envFrom:
+            - secretRef: 
+                name: orocommerce-secret
+          volumeMounts:
+            - name: orocommerce-app-pvc
+              mountPath: /var/www/oro
+            - name: orocommerce-app-cache-pvc
+              mountPath: /var/www/oro/var/cache
+            - name: orocommerce-app-multihost-operation-pvc
+              mountPath: /var/www/oro/var/multihost
+            - name: orocommerce-app-maintenance-pvc
+              mountPath: /var/www/oro/var/maintenance
+            - name: orocommerce-app-public-pvc
+              mountPath: /var/www/oro/public/media
+            - name: orocommerce-app-private-pvc
+              mountPath: /var/www/oro/var/data
+      volumes:
+        - name: orocommerce-app-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-pvc
+            readOnly: false
+        - name: orocommerce-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-cache-pvc
+            readOnly: false
+        - name: orocommerce-app-multihost-operation-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-multihost-operation-pvc
+            readOnly: false
+        - name: orocommerce-app-maintenance-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-maintenance-pvc
+            readOnly: false
+        - name: orocommerce-app-public-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-public-pvc
+            readOnly: false
+        - name: orocommerce-app-private-pvc
+          persistentVolumeClaim:
+            claimName: orocommerce-app-private-pvc
+            readOnly: false

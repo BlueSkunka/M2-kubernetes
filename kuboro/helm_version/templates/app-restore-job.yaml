@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-app-restore-job
+  namespace: {{ .Values.namespace }}
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      initContainers:
+        - name: {{ .Values.restore.initContainerName }}
+          image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
+          args: 
+            {{- with .Values.restore.initContainerArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /data
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /data/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /data/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /data/var/private
+          securityContext:
+            {{- with .Values.rootSecurityContext }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: {{ .Values.restore.defaultContainerName }}
+          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+          command: 
+            {{- with .Values.restore.defaultContainerCommand }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            - secretRef: 
+                name: {{ .Release.Name }}-secret
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /var/www/oro
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /var/www/oro/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /var/www/oro/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /var/www/oro/var/data
+      restartPolicy: Never
+      volumes:
+        - name: {{ .Release.Name }}-app-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-public-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-public-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-private-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-private-pvc
+            readOnly: false
