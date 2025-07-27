@@ -23,16 +23,14 @@ spec:
         - name: {{ default "verify-connection" .Values.websocket.initContainerName }}
           image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
           command: 
-            {{- with .Values.websocket.initContainerCommand }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
+            - "sh"
+            - "-c"
+            - "until nc -z {{ .Release.Name }}-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"
       containers:
       - name: {{ default "orocommerce-connection" .Values.websocket.defaultContainerName }}
         image: {{ .Values.images.oroImageBaseRuntime }}:{{ .Values.images.oroImageBaseRuntimeTag }}
         args: 
-          {{- with .Values.websocket.defaultContainerArgs }}
-          {{- toYaml . | nindent 12 }}
-          {{- end }}
+          - "websocket"
         ports:
         - containerPort: 8080
         envFrom:

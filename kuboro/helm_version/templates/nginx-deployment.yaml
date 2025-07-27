@@ -23,9 +23,9 @@ spec:
       - name: {{ .Values.nginx.initContainerName }}
         image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
         command: 
-          {{- with .Values.nginx.initContainerCommand }}
-          {{- toYaml . | nindent 12 }}
-          {{- end }}
+          - "sh"
+          - "-c"
+          - "until nc -z {{ .Release.Name }}-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z {{ .Release.Name }}-websocket 8080; do echo \"Waiting for websocket connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"
         envFrom:
             - secretRef: 
                 name: {{ .Release.Name }}-secret
@@ -42,12 +42,10 @@ spec:
         ports:
           - containerPort: 80
         args: 
-          {{- with .Values.nginx.defaultContainerArgs }}
-          {{- toYaml . | nindent 12 }}
-          {{- end }}
+          - "nginx"
         envFrom:
-            - secretRef: 
-                name: {{ .Release.Name }}-secret
+          - secretRef: 
+              name: {{ .Release.Name }}-secret
         livenessProbe:
           {{- with .Values.nginx.defaultLivenessProbe }}
           {{- toYaml . | nindent 12 }}

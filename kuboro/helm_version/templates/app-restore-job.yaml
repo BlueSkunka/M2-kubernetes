@@ -3,6 +3,10 @@ kind: Job
 metadata:
   name: {{ .Release.Name }}-app-restore-job
   namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   ttlSecondsAfterFinished: 100
   template:
@@ -11,9 +15,8 @@ spec:
         - name: {{ .Values.restore.initContainerName }}
           image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
           args: 
-            {{- with .Values.restore.initContainerArgs }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
+            - "-c"
+            - "cp -rp /var/www/oro/. /data && chown -R www-data:www-data /data"
           volumeMounts:
           - name: {{ .Release.Name }}-app-pvc
             mountPath: /data
@@ -31,9 +34,9 @@ spec:
         - name: {{ .Values.restore.defaultContainerName }}
           image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
           command: 
-            {{- with .Values.restore.defaultContainerCommand }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
+          - sh
+          - -c 
+          - "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
           envFrom:
             - secretRef: 
                 name: {{ .Release.Name }}-secret
