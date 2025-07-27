@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-app-multihost-operation-pvc
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  accessModes:
+    {{- with .Values.persistentVolumes.appMultihostOperationAccessModes }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ default "10Gi" .Values.persistentVolumes.appMultihostOperationCapacity }}
+  storageClassName: {{ default "local-storage" .Values.storageClass.name }}
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-app-multihost-operation-pv

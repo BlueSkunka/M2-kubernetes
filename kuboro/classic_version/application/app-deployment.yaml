@@ -16,6 +16,10 @@ spec:
       securityContext:
         runAsUser: 2002
         runAsGroup: 2001
+      initContainers:
+        - name: verify-connection
+          image: oroinc/orocommerce-application-init-fr:6.1.0
+          command: ["sh", "-c", "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done"]
       containers:
         - name: orocommerce-app
           image: oroinc/runtime:6.1-latest

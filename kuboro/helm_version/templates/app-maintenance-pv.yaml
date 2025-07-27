@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-app-maintenance-pv
+  labels:
+    name: {{ .Release.Name }}-app-maintenance-pv
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  capacity:
+    storage: {{ default "10Gi" .Values.persistentVolumes.appMaintenanceCapacity }}
+  accessModes:
+    {{- with .Values.persistentVolumes.appMaintenanceAccessModes }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  persistentVolumeReclaimPolicy: {{ default "Retain" .Values.storageClass.reclaimPolicy }}
+  storageClassName: {{ default "local-storage" .Values.storageClass.name }}
+  hostPath:
+    path: {{ default "/orocommerce/maintenance" .Values.persistentVolumes.appMaintenanceHostPath }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ .Values.persistentVolumes.nodeHostname }}

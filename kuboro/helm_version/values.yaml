@@ -1,0 +1,147 @@
+# Default values for orocommerce.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+namespace: orocommerce
+
+storageClass:
+  name: local-storage
+  provisioner: kubernetes.io/no-provisioner
+  volumeBindingMode: WaitForFirstConsumer
+  reclaimPolicy: Retain
+
+images:
+  oroImage: oroinc/orocommerce-application
+  oroImageTag: 6.1.0
+  oroImageInit: oroinc/orocommerce-application-init-fr
+  oroImageInitTag: 6.1.0
+  oroImageBaseRuntime: oroinc/runtime
+  oroImageBaseRuntimeTag: 6.1-latest
+
+appSecurityContext:
+  runAsUser: 2002
+  runAsGroup: 2001
+
+rootSecurityContext:
+  runAsUser: 0
+
+envLogValue: php://stderr
+persistentVolumes:
+  ## Utiliser pour le node affinity du pv
+  nodeHostname: minikube
+  ## PV de l'application
+  appCapacity: 10Gi
+  appAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appHostPath: /orocommerce/app
+  ## PV du cache de l'application
+  appCacheCapacity: 10Gi
+  appCacheAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appCacheHostPath: /orocommerce/cache
+  ## PV de la maintenance de l'application
+
+  appMaintenanceCapacity: 10Gi
+  appMaintenanceAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appMaintenanceHostPath: /orocommerce/maintenance
+  ## PV des opération multiples de l'application
+  appMultihostOperationCapacity: 10Gi
+  appMultihostOperationAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appMultihostOperationHostPath: /orocommerce/multihost-operation
+  ## PV des dossiers privés de l'application
+  appPrivateCapacity: 10Gi
+  appPrivateAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appPrivateHostPath: /orocommerce/private
+  ## PV des dossiers publics de l'application
+  appPublicCapacity: 10Gi
+  appPublicAccessModes:
+    - ReadWriteMany
+    - ReadOnlyMany
+  appPublicHostPath: /orocommerce/public
+  ## PV du NGNIX
+  nginxCapacity: 10Gi
+  nginxAccessModes:
+    - ReadWriteMany
+  nginxHostPath: /orocommerce/nginx
+  ## PV Postgre
+  postgreCapacity: 10Gi
+  postgreAccessModes:
+    - ReadWriteOncePod
+  postgreHostPath: /orocommerce/postgre
+
+
+  
+restore:
+  initContainerName: volume-init
+  defaultContainerName: restore
+  restartPolicy: Never
+
+consumer:
+  initContainerName: verify-connection
+  defaultContainerName: consumer
+
+cron:
+  initContainerName: verify-connection
+  defaultContainerName: cron
+
+app:
+  defaultContainerName: orocommerce-app
+  defaultLivenessProbe:
+    exec:
+      command:
+          - /bin/sh
+          - -c
+          - php-fpm-healthcheck
+    periodSeconds: 5
+    initialDelaySeconds: 15
+    timeoutSeconds: 30
+  defaultContainerResource:
+    requests:
+      memory: "200Mi"
+      cpu: "200m"
+    # limits:
+    #   memory: "300Mi"
+    #   cpu: "300m"
+  hpaMinReplicas: 1
+  hpaMaxReplicas: 2
+  hpaAverageCpuUtilization: 20
+
+nginx:
+  initContainerName: ngnix-init
+  initContainerCommand: 
+  defaultContainerName: nginx
+  defaultLivenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 30
+  defaultStartupProbe:
+    httpGet:
+      path: /
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 30
+  ingressClass: nginx
+  ingressHost: oro.demo
+
+websocket:
+  initContainerName: verify-connection
+  defaultContainerName: websocket
+
+
+secrets:
+  protocol: https

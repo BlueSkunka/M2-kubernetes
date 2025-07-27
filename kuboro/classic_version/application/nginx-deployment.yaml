@@ -21,7 +21,7 @@ spec:
       initContainers:
       - name: nginx-init
         image: oroinc/orocommerce-application:6.1.0
-        command: ["sh", "-c", "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"]
+        command: ["sh", "-c", "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for websocket connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"]
         envFrom:
             - secretRef: 
                 name: orocommerce-secret

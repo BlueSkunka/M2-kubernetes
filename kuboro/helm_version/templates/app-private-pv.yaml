@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-app-private-pv
+  labels:
+    name: {{ .Release.Name }}-app-private-pv
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  capacity:
+    storage: {{ default "10Gi" .Values.persistentVolumes.appPrivateCapacity }}
+  accessModes:
+    {{- with .Values.persistentVolumes.appPrivateAccessModes }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  persistentVolumeReclaimPolicy: {{ default "Retain" .Values.storageClass.reclaimPolicy }}
+  storageClassName: {{ default "local-storage" .Values.storageClass.name }}
+  hostPath:
+    path: {{ default "/orocommerce/private" .Values.persistentVolumes.appPrivateHostPath }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ .Values.persistentVolumes.nodeHostname }}

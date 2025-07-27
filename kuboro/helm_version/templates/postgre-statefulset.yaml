@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgre
+  labels:
+    app: {{ .Release.Name }}-postgre
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-postgre
+  serviceName: {{ .Release.Name }}-postgre
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-postgre
+    spec:
+      containers:
+        - name: postgre
+          image: docker.io/oroinc/pgsql:17.2-alpine
+          ports:
+          - containerPort: 5432
+            name: postgre
+          env:
+            - name: POSTGRES_ROOT_PASSWORD
+              value: "orodbpass"
+            - name: POSTGRES_DB
+              value: "orodb"
+            - name: POSTGRES_USER
+              value: "orodbuser"
+            - name: POSTGRES_PASSWORD
+              value: "orodbpass"
+          volumeMounts:
+            - name: {{ .Release.Name }}-postgre-pvc
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - exec pg_isready -U orodbuser -d orodb
+            failureThreshold: 6
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - -e
+              - |
+                exec pg_isready -U orodbuser -d orodb
+            failureThreshold: 6
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-postgre-pvc
+      spec:
+        accessModes:
+          {{- with .Values.persistentVolumes.postgreAccessModes }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ default "5Gi" .Values.persistentVolumes.postgreCapacity }}
+        storageClassName: {{ default "local-storage" .Values.storageClass.name }}
+        selector:
+          matchLabels:
+            name: {{ .Release.Name }}-postgre-pv
+        

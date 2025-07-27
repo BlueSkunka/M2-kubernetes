@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-websocket
+  labels:
+    app: {{ .Release.Name }}-websocket
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-websocket
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-websocket
+    spec:
+      securityContext:
+        {{- with .Values.appSecurityContext }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      initContainers:
+        - name: {{ default "verify-connection" .Values.websocket.initContainerName }}
+          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+          command: 
+            - "sh"
+            - "-c"
+            - "until nc -z {{ .Release.Name }}-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"
+      containers:
+      - name: {{ default "orocommerce-connection" .Values.websocket.defaultContainerName }}
+        image: {{ .Values.images.oroImageBaseRuntime }}:{{ .Values.images.oroImageBaseRuntimeTag }}
+        args: 
+          - "websocket"
+        ports:
+        - containerPort: 8080
+        envFrom:
+            - secretRef: 
+                name: {{ .Release.Name }}-secret
+        volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /var/www/oro
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /var/www/oro/var/cache
+          - name: {{ .Release.Name }}-app-maintenance-pvc
+            mountPath: /var/www/oro/var/maintenance
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /var/www/oro/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /var/www/oro/var/data
+      volumes:
+        - name: {{ .Release.Name }}-app-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-maintenance-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-maintenance-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-public-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-public-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-private-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-private-pvc
+            readOnly: false

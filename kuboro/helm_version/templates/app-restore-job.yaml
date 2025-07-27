@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-app-restore-job
+  namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      initContainers:
+        - name: {{ .Values.restore.initContainerName }}
+          image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
+          args: 
+            - "-c"
+            - "cp -rp /var/www/oro/. /data && chown -R www-data:www-data /data"
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /data
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /data/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /data/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /data/var/private
+          securityContext:
+            {{- with .Values.rootSecurityContext }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: {{ .Values.restore.defaultContainerName }}
+          image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+          command: 
+          - sh
+          - -c 
+          - "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
+          envFrom:
+            - secretRef: 
+                name: {{ .Release.Name }}-secret
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /var/www/oro
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /var/www/oro/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /var/www/oro/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /var/www/oro/var/data
+      restartPolicy: Never
+      volumes:
+        - name: {{ .Release.Name }}-app-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-public-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-public-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-private-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-private-pvc
+            readOnly: false

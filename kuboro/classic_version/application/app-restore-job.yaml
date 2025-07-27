@@ -4,6 +4,7 @@ metadata:
   name: orocommerce-app-restore-job
   namespace: orocommerce
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       initContainers:
@@ -21,10 +22,16 @@ spec:
             mountPath: /data/var/private
           securityContext:
             runAsUser: 0
+        - name: verify-connection
+          image: oroinc/orocommerce-application:6.1.0
+          command: ["sh", "-c", "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done"]
       containers:
         - name: restore
           image: oroinc/orocommerce-application-init-fr:6.1.0
-          command: ["sh", "-c", "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore"]
+          command: 
+            - sh
+            - -c
+            - "docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
