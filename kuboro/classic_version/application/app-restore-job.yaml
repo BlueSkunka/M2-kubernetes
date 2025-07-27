@@ -28,7 +28,10 @@ spec:
       containers:
         - name: restore
           image: oroinc/orocommerce-application-init-fr:6.1.0
-          args: ["restore"]
+          command: 
+            - sh
+            - -c
+            - "docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
