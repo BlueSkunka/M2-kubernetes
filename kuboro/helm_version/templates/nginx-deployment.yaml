@@ -21,7 +21,7 @@ spec:
         {{- end }}
       initContainers:
       - name: {{ .Values.nginx.initContainerName }}
-        image: {{ .Values.images.oroImageInit }}:{{ .Values.images.oroImageInitTag }}
+        image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
         command: 
           {{- with .Values.nginx.initContainerCommand }}
           {{- toYaml . | nindent 12 }}

@@ -85,13 +85,13 @@ persistentVolumes:
 restore:
   initContainerName: volume-init
   initContainerArgs: 
-    - -c
+    - "-c"
     - "cp -rp /var/www/oro/. /data && chown -R www-data:www-data /data"
   defaultContainerName: restore
   defaultContainerCommand: 
     - sh
     - -c 
-    - "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore"
+    - "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
   restartPolicy: Never
 
 consumer:
@@ -141,14 +141,12 @@ app:
 nginx:
   initContainerName: ngnix-init
   initContainerCommand: 
-    - sh
-    - -c
-    - until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf
+    - "sh"
+    - "-c"
+    - "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z orocommerce-websocket 8080; do echo \"Waiting for websocket connection...\"; sleep 1; done && /usr/local/bin/docker-entrypoint.sh nginx-init && sed -i '/gridfs/d; /mongo/d' /opt/oro-nginx/etc/sites-available/*.conf"
   defaultContainerName: nginx
   defaultContainerArgs: 
     - nginx
-  defaultContainerPorts:
-    - containerPort: 80
   defaultLivenessProbe:
     httpGet:
       path: /
@@ -169,14 +167,12 @@ nginx:
 websocket:
   initContainerName: verify-connection
   initContainerCommand: 
-    - sh 
-    - -c
+    - "sh"
+    - "-c"
     - "until nc -z orocommerce-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"
   defaultContainerName: websocket
   defaultContainerArgs: 
    - "websocket"
-  defaultContainerPorts:
-    - containerPort: 8080
 
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/

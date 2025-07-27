@@ -3,10 +3,6 @@ kind: StorageClass
 metadata:
   name: {{ default "local-storage" .Values.storageClass.name }}
   namespace: {{ default "orocommerce" .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": hook-succeeded
 provisioner: {{ default "kubernetes.io/no-provisioner" .Values.storageClass.provisioner }} # indicates that this StorageClass does not support automatic provisioning
 volumeBindingMode: {{ default "WaitForFirstConsumer" .Values.storageClass.volumeBindingMode }}
 reclaimPolicy: {{ default "Retain" .Values.storageClass.reclaimPolicy }}
