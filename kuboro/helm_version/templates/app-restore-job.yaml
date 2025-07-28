@@ -43,6 +43,10 @@ spec:
           envFrom:
             - secretRef: 
                 name: {{ .Release.Name }}-secret
+          resources:
+            {{- with .Values.restore.defaultContainerResource }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumeMounts:
           - name: {{ .Release.Name }}-app-pvc
             mountPath: /var/www/oro

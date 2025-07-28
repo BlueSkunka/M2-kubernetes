@@ -31,6 +31,13 @@ spec:
               value: "orodbuser"
             - name: POSTGRES_PASSWORD
               value: "orodbpass"
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
           volumeMounts:
             - name: orocommerce-postgre-pvc
               mountPath: /var/lib/postgresql/data

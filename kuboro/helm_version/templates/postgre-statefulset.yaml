@@ -31,6 +31,10 @@ spec:
               value: "orodbuser"
             - name: POSTGRES_PASSWORD
               value: "orodbpass"
+          resources:
+            {{- with .Values.postgre.defaultContainerResource }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumeMounts:
             - name: {{ .Release.Name }}-postgre-pvc
               mountPath: /var/lib/postgresql/data

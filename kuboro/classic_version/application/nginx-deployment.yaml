@@ -39,6 +39,13 @@ spec:
         envFrom:
             - secretRef: 
                 name: orocommerce-secret
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "500m"
+          limits:
+            memory: "1000Mi"
+            cpu: "1000m"
         livenessProbe:
           httpGet:
             path: /

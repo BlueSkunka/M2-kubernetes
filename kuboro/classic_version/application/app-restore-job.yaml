@@ -35,6 +35,13 @@ spec:
           envFrom:
             - secretRef: 
                 name: orocommerce-secret
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1000Mi"
+              cpu: "1000m"
           volumeMounts:
           - name: orocommerce-app-pvc
             mountPath: /var/www/oro

@@ -106,20 +106,48 @@ postgre:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 5
+  defaultContainerResource:
+    requests:
+      memory: "500Mi"
+      cpu: "500m"
+    limits:
+      memory: "1000Mi"
+      cpu: "1000m"
   
 restore:
   verifyConnectionContainerName: verify-connection
   initContainerName: volume-init
   defaultContainerName: restore
   restartPolicy: Never
+  defaultContainerResource:
+    requests:
+      memory: "500Mi"
+      cpu: "500m"
+    limits:
+      memory: "1000Mi"
+      cpu: "1000m"
 
 consumer:
   initContainerName: verify-connection
   defaultContainerName: consumer
+  defaultContainerResource:
+    requests:
+      memory: "250Mi"
+      cpu: "250m"
+    limits:
+      memory: "500Mi"
+      cpu: "500m"
 
 cron:
   initContainerName: verify-connection
   defaultContainerName: cron
+  defaultContainerResource:
+    requests:
+      memory: "250Mi"
+      cpu: "250m"
+    limits:
+      memory: "500Mi"
+      cpu: "500m"
 
 app:
   defaultContainerName: orocommerce-app
@@ -134,11 +162,11 @@ app:
     timeoutSeconds: 30
   defaultContainerResource:
     requests:
-      memory: "200Mi"
-      cpu: "200m"
-    # limits:
-    #   memory: "300Mi"
-    #   cpu: "300m"
+      memory: "500Mi"
+      cpu: "500m"
+    limits:
+      memory: "1000Mi"
+      cpu: "1000m"
   hpaMinReplicas: 1
   hpaMaxReplicas: 2
   hpaAverageCpuUtilization: 20
@@ -163,6 +191,13 @@ nginx:
     timeoutSeconds: 30
   ingressClass: nginx
   ingressHost: oro.demo
+  defaultContainerResource:
+    requests:
+      memory: "500Mi"
+      cpu: "500m"
+    limits:
+      memory: "1000Mi"
+      cpu: "1000m"
 
 websocket:
   initContainerName: verify-connection
