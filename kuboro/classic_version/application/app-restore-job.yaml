@@ -8,6 +8,9 @@ spec:
   template:
     spec:
       initContainers:
+        - name: verify-connection
+          image: oroinc/orocommerce-application:6.1.0
+          command: [ "sh", "-c", "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done" ]
         - name: volume-init
           image: oroinc/orocommerce-application:6.1.0
           args: ["-c", "cp -rp /var/www/oro/. /data && chown -R www-data:www-data /data"]
@@ -22,9 +25,6 @@ spec:
             mountPath: /data/var/private
           securityContext:
             runAsUser: 0
-        - name: verify-connection
-          image: oroinc/orocommerce-application:6.1.0
-          command: ["sh", "-c", "until nc -z orocommerce-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done"]
       containers:
         - name: restore
           image: oroinc/orocommerce-application-init-fr:6.1.0

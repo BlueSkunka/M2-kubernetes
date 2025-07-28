@@ -41,7 +41,7 @@ spec:
               - -c
               - exec pg_isready -U orodbuser -d orodb
             failureThreshold: 6
-            initialDelaySeconds: 15
+            initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
@@ -54,7 +54,7 @@ spec:
               - |
                 exec pg_isready -U orodbuser -d orodb
             failureThreshold: 6
-            initialDelaySeconds: 15
+            initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5

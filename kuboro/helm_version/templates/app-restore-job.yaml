@@ -12,6 +12,9 @@ spec:
   template:
     spec:
       initContainers:
+        - name: {{ default "verify-connection" .Values.restore.verifyConnectionContainerName }}
+          image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
+          command: [ "sh", "-c", "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done" ]
         - name: {{ .Values.restore.initContainerName }}
           image: {{ .Values.images.oroImage }}:{{ .Values.images.oroImageTag }}
           args: 

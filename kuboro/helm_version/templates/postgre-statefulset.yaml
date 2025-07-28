@@ -17,7 +17,7 @@ spec:
         app: {{ .Release.Name }}-postgre
     spec:
       containers:
-        - name: postgre
+        - name: {{ default "postgre" .Values.postgre.defaultContainerName }}
           image: docker.io/oroinc/pgsql:17.2-alpine
           ports:
           - containerPort: 5432
@@ -35,29 +35,13 @@ spec:
             - name: {{ .Release.Name }}-postgre-pvc
               mountPath: /var/lib/postgresql/data
           livenessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - exec pg_isready -U orodbuser -d orodb
-            failureThreshold: 6
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
+            {{- with .Values.postgre.defaultLivenessProbe }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           readinessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - -e
-              - |
-                exec pg_isready -U orodbuser -d orodb
-            failureThreshold: 6
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
+            {{- with .Values.postgre.defaultReadinessProbe }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: {{ .Release.Name }}-postgre-pvc

@@ -17,10 +17,6 @@ spec:
         {{- with .Values.appSecurityContext }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      initContainers:
-        - name: verify-connection
-          image: oroinc/orocommerce-application-init-fr:6.1.0
-          command: ["sh", "-c", "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done"]
       containers:
         - name: {{ default "orocommerce-app" .Values.app.defaultContainerName }}
           image: {{ .Values.images.oroImageBaseRuntime }}:{{ .Values.images.oroImageBaseRuntimeTag }}
