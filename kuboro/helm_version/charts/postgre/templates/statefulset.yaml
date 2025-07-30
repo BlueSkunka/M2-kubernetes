@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgre
+  labels:
+    app: {{ .Release.Name }}-postgre
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-postgre
+  serviceName: {{ .Release.Name }}-postgre
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-postgre
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+
+            - name: postgre
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: POSTGRES_ROOT_PASSWORD
+              value: "orodbpass"
+            - name: POSTGRES_DB
+              value: "orodb"
+            - name: POSTGRES_USER
+              value: "orodbuser"
+            - name: POSTGRES_PASSWORD
+              value: "orodbpass"
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts: 
+            - name: {{ .Release.Name }}-postgre-pv
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-postgre-pv
+      spec:
+        {{- with .Values.persistentVolume.accessModes }}
+        accessModes:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ default "5Gi" .Values.persistentVolume.storage }}
+        storageClassName: {{ default "local-storage" .Values.persistentVolume.storageClassName }}
+        selector:
+          matchLabels:
+            name: {{ .Release.Name }}-postgre-pv
+
+        
