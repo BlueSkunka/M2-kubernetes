@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: "app"
+          image: "{{ .Values.images.runtime.repository }}:{{ .Values.images.runtime.tag | default .Chart.AppVersion }}"
+          args: 
+            - "php-fpm"
+          env:
+            - name: ORO_LOG_PATH
+              value: php://stderr
+          envFrom:
+            - secretRef: 
+                name: {{ .Release.Name }}-secret
+          ports:
+            - name: php-fpm
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-app-pvc
+              mountPath: /var/www/oro
+            - name: {{ .Release.Name }}-app-cache-pvc
+              mountPath: /var/www/oro/var/cache
+            - name: {{ .Release.Name }}-app-multihost-operation-pvc
+              mountPath: /var/www/oro/var/multihost
+            - name: {{ .Release.Name }}-app-maintenance-pvc
+              mountPath: /var/www/oro/var/maintenance
+            - name: {{ .Release.Name }}-app-public-pvc
+              mountPath: /var/www/oro/public/media
+            - name: {{ .Release.Name }}-app-private-pvc
+              mountPath: /var/www/oro/var/data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: {{ .Release.Name }}-app-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-multihost-operation-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-multihost-operation-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-maintenance-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-maintenance-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-public-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-public-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-private-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-private-pvc
+            readOnly: false
+        - name: tmp
+          emptyDir: {}

@@ -1,0 +1,72 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-app-restore-job
+  namespace: {{ default "orocommerce" .Values.namespace }}
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      initContainers:
+        - name: "verify-connection"
+          image: {{ .Values.images.application.repository }}:{{ .Values.images.application.tag | default .Chart.AppVersion }}
+          command: [ "sh", "-c", "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done" ]
+        - name: "init-volume"
+          image: {{ .Values.images.application.repository }}:{{ .Values.images.application.tag | default .Chart.AppVersion }}
+          args: 
+            - "-c"
+            - "cp -rp /var/www/oro/. /data && chown -R www-data:www-data /data"
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /data
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /data/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /data/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /data/var/private
+          {{- with .Values.initSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      containers:
+        - name: "app-restore"
+          image: "{{ .Values.images.init.repository }}:{{ .Values.images.init.tag | default .Chart.AppVersion }}"
+          command: 
+          - sh
+          - -c 
+          - "until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done && docker-entrypoint.sh restore && chown -R www-data:www-data /var/www/oro"
+          envFrom:
+            - secretRef: 
+                name: {{ .Release.Name }}-secret
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          - name: {{ .Release.Name }}-app-pvc
+            mountPath: /var/www/oro
+          - name: {{ .Release.Name }}-app-cache-pvc
+            mountPath: /var/www/oro/var/cache
+          - name: {{ .Release.Name }}-app-public-pvc
+            mountPath: /var/www/oro/public/media
+          - name: {{ .Release.Name }}-app-private-pvc
+            mountPath: /var/www/oro/var/data
+      restartPolicy: Never
+      volumes:
+        - name: {{ .Release.Name }}-app-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-cache-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-cache-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-public-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-public-pvc
+            readOnly: false
+        - name: {{ .Release.Name }}-app-private-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-app-private-pvc
+            readOnly: false
