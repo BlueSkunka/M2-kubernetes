@@ -1,6 +1,6 @@
 # OROCOMMERCE
 
-Groupe:
+Groupe 1 :
 - SCHULER Kenza
 - PERDRIX Olivier
 - ROME Mathis
