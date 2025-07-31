@@ -52,6 +52,13 @@ minikube addons enable volumesnapshots
 minikube addons enable csi-hostpath-driver
 ```
 
+Ajout du pod pour l'Ingress de classe Traefik :
+```shell
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+helm install traefik traefik/traefik
+```
+
 Démarrer le tunnel Minikube :
 ```shell
 minikube tunnel

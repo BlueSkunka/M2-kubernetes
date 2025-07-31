@@ -4,7 +4,7 @@ metadata:
   name: orocommerce-ingress
   namespace: orocommerce
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
         - oro.demo
