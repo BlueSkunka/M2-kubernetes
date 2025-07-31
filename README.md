@@ -16,13 +16,15 @@ L'architecture des dossiers se présente comme telle :
 ├── kuboro
 │   ├── classic_version
 │   └── helm_version
-└── prom_grafana
-    ├── helm_version
-    └── ingress_classic_version
+├── prom_grafana
+│   ├── helm_version
+│   └── ingress_classic_version
+└── sentry
 ```
 - Dockoro est le dossier contenant la démonstration du CRM
 - Kuboro contient 2 dossiers, un premier correspondant à notre architecture avec des manifests Kubernetes, ce dossier à principalement servi à comprendre comment fonctionnait les différentes ressources Kubernetes, le second est la retranscription du premier mais en Helm Chart
 - prom_grafana contient une version classique, avec l'utilisation d'un `Ingress Controller` fait maison, tandis que le second dossier utilise un fichier `values.yaml` adapté à notre besoin.
+- On a essayé Sentry mais on a constaté que les services consommaient beaucoup trop de ressources par rapport à la stack Prometheus / Grafana, on a donc décidé d'abandonner cette partie.
 
 Dans un premier temps, nous vons donnerons les prérequis au bon lancement de notre architecture.
 
