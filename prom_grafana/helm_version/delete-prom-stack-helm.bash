@@ -1,3 +1,4 @@
 #!/bin/bash
 
-helm uninstall prometheus
+helm uninstall -n monitoring prometheus
+kubectl delete -f grafana-tls-secret.yaml

@@ -1305,7 +1305,7 @@ grafana:
     ## IngressClassName for Grafana Ingress.
     ## Should be provided if Ingress is enable.
     ##
-    ingressClassName: nginx-grafana
+    ingressClassName: nginx
 
     ## Annotations for Grafana Ingress
     ##
@@ -1320,8 +1320,7 @@ grafana:
     ## Hostnames.
     ## Must be provided if Ingress is enable.
     ##
-    hosts:
-     - grafana.domain.com
+    hosts: ["grafana.minikube"]
 #    hosts: []
 
     ## Path for grafana ingress
