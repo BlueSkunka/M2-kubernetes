@@ -1305,7 +1305,7 @@ grafana:
     ## IngressClassName for Grafana Ingress.
     ## Should be provided if Ingress is enable.
     ##
-    ingressClassName: nginx
+    ingressClassName: traefik
 
     ## Annotations for Grafana Ingress
     ##

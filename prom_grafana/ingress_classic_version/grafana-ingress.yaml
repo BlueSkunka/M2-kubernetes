@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: grafana-ingress
-  namespace: default
+  namespace: monitoring
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
       - grafana.minikube
