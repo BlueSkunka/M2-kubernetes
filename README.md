@@ -103,6 +103,12 @@ bash apply-project.bash
 
 Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
 
+[Administration](https://oro.demo/admin) : admin/admin
+
+[Compte classique](https://oro.demo/customer/user/login) :
+- AmandaRCole@example.org / AmandaRCole@example.org
+- BrandaJSanborn@example.org / BrandaJSanborn@example.org
+
 Pour arreter l'environnement, lancer la commande suivante :
 ```shell
 bash delete-project.bash
@@ -115,6 +121,10 @@ Se placer dans le dossier `prom_grafana/ingress_classic_version`, et exécuter l
 ```shell
 bash apply-prom-stack-classic.bash
 ```
+
+Une fois les pods lancés vous pouvez accéder au dashboard via l'url [https://grafana.minikube](https://grafana.minikube).
+
+Identifiant : admin / prom-operator
 
 Pour arrêter l'environnement, lancer la commande suivante :
 ```shell
@@ -131,6 +141,12 @@ helm install -n orocommerce --create-namespace orocommerce .
 
 Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
 
+[Administration](https://oro.demo/admin) : admin/admin
+
+[Compte classique](https://oro.demo/customer/user/login) :
+- AmandaRCole@example.org / AmandaRCole@example.org
+- BrandaJSanborn@example.org / BrandaJSanborn@example.org
+
 Pour arreter l'environnement, lancer la commande suivante :
 ```shell
 helm uninstall -n orocommerce orocommerce
@@ -143,6 +159,10 @@ Se placer dans le dossier `prom_grafana/helm_version`, et exécuter la commande 
 ```shell
 bash apply-prom-stack-helm.bash
 ```
+
+Une fois les pods lancés vous pouvez accéder au dashboard via l'url [https://grafana.minikube](https://grafana.minikube).
+
+Identifiant : admin / prom-operator
 
 Pour arrêter l'environnement, lancer la commande suivante :
 ```shell
