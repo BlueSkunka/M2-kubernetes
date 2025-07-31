@@ -87,5 +87,5 @@ spec:
         resources:
           requests:
             storage: 5Gi
-        storageClassName: orocommerce-csi-hostpath-sc
+        storageClassName: csi-hostpath-sc
         

@@ -2,10 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-storageClass:
-  provisioner: hostpath.csi.k8s.io
-  volumeBindingMode: Immediate
-  reclaimPolicy: Retain
+storageClassName: csi-hostpath-sc
 
 envLogValue: php://stderr
 

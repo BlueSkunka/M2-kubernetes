@@ -10,4 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ default "10Gi" .Values.persistentVolumes.appCapacity }}
-  storageClassName: {{ .Release.Name }}-csi-hostpath-sc
+  storageClassName: {{ default "csi-hostpath-sc" .Values.storageClassName }}
