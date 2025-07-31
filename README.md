@@ -69,95 +69,25 @@ minikube tunnel
 Modifier votre fichier `hosts` pour ajouter la configuration suivante :
 ```text
 127.0.0.1   oro.demo
+127.0.0.1   grafana.minikube
 ```
 
 ## Architecture
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {
-  'fontFamily': 'Inter, sans-serif',
-  'primaryTextColor': '#1f1f1f',
-  'clusterBorder': '#326CE5',
-  'nodeBorder': '#326CE5',
-  'clusterBkg': '#F0F6FF',
-  'primaryColor': '#ffffff',
-  'edgeLabelBackground': '#ffffff'
-}}}%%
+- [x] Nginx 
+    - Deployment
+    - Service
+- [x] PHP-FPM
+    - Deployment
+    - HPA
+- [x] Postgresql
+    - StatefulSet
+    - PVC
+- [x] Monitoring
+    - Prometheus
+    - Grafana
 
-graph TD
-    subgraph "User"
-        user((User))
-    end
-
-    subgraph "Kubernetes Cluster"
-        subgraph "Node: Minikube"
-            
-            subgraph "Ingress Controller"
-                ingress([IngressNginx])
-            end
-
-            subgraph "Namespace: orocommerce"
-                serviceApplication[Service: Application]
-
-                subgraph deploymentPHP["Deployment: PHP"]
-                    podApplication(((PHP Pod)))
-                end
-
-                subgraph deploymentNginx["Deployment: Nginx"]
-                    podNginx(((Nginx Pod)))
-                end
-
-                serviceNginx[Service: Nginx]
-
-                servicePostgre[Service: PostgreSQL]
-                subgraph statefulPostgre["StatefulSet: PostgreSQL"]
-                    podPostgre(((PostgreSQL Pod)))
-                end
-
-                serviceWebsocket[Service: Websocket]
-                subgraph deploymentWebsocket["Deployment: Websocket"]
-                    podWebsocket(((Websocket Pod)))
-                end
-
-                subgraph deploymentCron["Deployment: Cron"]
-                    podCron(((Cron Pod)))
-                end
-
-                subgraph deploymentConsumer["Deployment: Consumer"]
-                    podConsumer(((Consumer Pod)))
-                end
-            end
-
-            subgraph "Namespace: monitoring"
-                prometheus[Prometheus]
-                grafana[Grafana]
-            end
-        end
-    end
-
-    user --> ingress
-    ingress --> serviceNginx
-
-    serviceApplication --> podApplication
-    servicePostgre --> podPostgre
-    serviceNginx --> podNginx
-    serviceWebsocket --> podWebsocket
-
-    podNginx --> serviceApplication
-    podNginx --> serviceWebsocket
-    podApplication --> servicePostgre
-    podWebsocket --> servicePostgre
-    podCron --> servicePostgre
-    podConsumer --> servicePostgre
-    
-    style deploymentPHP stroke-dasharray: 5 5,fill:#F0F6FF
-    style deploymentNginx stroke-dasharray: 5 5,fill:#F0F6FF
-    style deploymentWebsocket stroke-dasharray: 5 5,fill:#F0F6FF
-    style deploymentCron stroke-dasharray: 5 5,fill:#F0F6FF
-    style deploymentConsumer stroke-dasharray: 5 5,fill:#F0F6FF
-    style statefulPostgre stroke-dasharray: 0,fill:#DAE6FB
-
-```
+![Mermaid Diagram](assets/mermaid-diagram.png)
 
 ## Démarrer notre application
 
