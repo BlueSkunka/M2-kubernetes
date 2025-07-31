@@ -231,4 +231,4 @@ bash delete-prom-stack-helm.bash
 | Sécurité   | Environnement local secrets en clair ou dans .env | Meilleure gestion des secrets via Kubernetes Secrets |
 | Scalabilité   | Très limitée (pas de scaling horizontal automatique) | Support du scaling automatique (HPA), gestion fine des ressources CPU/mémoire |
 | Usage   | Idéal pour le développement local ou les tests de démonstration | Configuration multi-environnement |
-| Résilience   | Aucune | Gestion des erreurs, redémarrage automatique, probes de liveness/readiness |
+| Résilience   | Aucune | Gestion des erreurs, probes de liveness/readiness |
