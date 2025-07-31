@@ -26,13 +26,25 @@ spec:
               protocol: TCP
           env:
             - name: POSTGRES_ROOT_PASSWORD
-              value: "orodbpass"
+              valueFrom:
+                secretKeyRef:
+                  name: orocommerce-secret
+                  key: ORO_DB_ROOT_PASSWORD
             - name: POSTGRES_DB
-              value: "orodb"
+              valueFrom:
+                secretKeyRef:
+                  name: orocommerce-secret
+                  key: ORO_DB_NAME
             - name: POSTGRES_USER
-              value: "orodbuser"
+              valueFrom:
+                secretKeyRef:
+                  name: orocommerce-secret
+                  key: ORO_DB_USER
             - name: POSTGRES_PASSWORD
-              value: "orodbpass"
+              valueFrom:
+                secretKeyRef:
+                  name: orocommerce-secret
+                  key: ORO_DB_PASSWORD
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
