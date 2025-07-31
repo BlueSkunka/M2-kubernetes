@@ -87,8 +87,5 @@ spec:
         resources:
           requests:
             storage: 5Gi
-        storageClassName: local-storage
-        selector:
-          matchLabels:
-            name: orocommerce-postgre-pv
+        storageClassName: orocommerce-csi-hostpath-sc
         

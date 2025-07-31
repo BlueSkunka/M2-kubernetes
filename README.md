@@ -48,6 +48,8 @@ Minikube avec les addons suivants :
 ```shell
 minikube addons enable ingress
 minikube addons enable metrics-server
+minikube addons enable volumesnapshots
+minikube addons enable csi-hostpath-driver
 ```
 
 Démarrer le tunnel Minikube :

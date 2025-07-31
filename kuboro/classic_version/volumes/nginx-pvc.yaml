@@ -10,7 +10,4 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local-storage
-  selector:
-    matchLabels:
-      name: orocommerce-nginx-pv
+  storageClassName: orocommerce-csi-hostpath-sc

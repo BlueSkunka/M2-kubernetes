@@ -11,7 +11,4 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local-storage
-  selector:
-    matchLabels:
-      name: orocommerce-app-maintenance-pv
+  storageClassName: orocommerce-csi-hostpath-sc

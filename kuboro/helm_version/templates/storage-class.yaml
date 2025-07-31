@@ -1,8 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: {{ default "local-storage" .Values.storageClass.name }}
-  namespace: {{ default "orocommerce" .Values.namespace }}
-provisioner: {{ default "kubernetes.io/no-provisioner" .Values.storageClass.provisioner }} # indicates that this StorageClass does not support automatic provisioning
-volumeBindingMode: {{ default "WaitForFirstConsumer" .Values.storageClass.volumeBindingMode }}
+  name: {{ .Release.Name }}-csi-hostpath-sc
+provisioner: {{ default "hostpath.csi.k8s.io" .Values.storageClass.provisioner }}
 reclaimPolicy: {{ default "Retain" .Values.storageClass.reclaimPolicy }}
+volumeBindingMode: {{ default "Immediate" .Values.storageClass.volumeBindingMode }}

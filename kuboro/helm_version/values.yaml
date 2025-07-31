@@ -3,9 +3,8 @@
 # Declare variables to be passed into your templates.
 
 storageClass:
-  name: local-storage
-  provisioner: kubernetes.io/no-provisioner
-  volumeBindingMode: WaitForFirstConsumer
+  provisioner: hostpath.csi.k8s.io
+  volumeBindingMode: Immediate
   reclaimPolicy: Retain
 
 envLogValue: php://stderr

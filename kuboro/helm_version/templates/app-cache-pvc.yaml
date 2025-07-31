@@ -10,7 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ default "10Gi" .Values.persistentVolumes.appCacheCapacity }}
-  storageClassName: {{ default "local-storage" .Values.storageClass.name }}
-  selector:
-    matchLabels:
-      name: {{ .Release.Name }}-app-cache-pv
+  storageClassName: {{ .Release.Name }}-csi-hostpath-sc

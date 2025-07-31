@@ -71,9 +71,6 @@ spec:
         resources:
           requests:
             storage: {{ default "5Gi" .Values.persistentVolume.storage }}
-        storageClassName: {{ default "local-storage" .Values.persistentVolume.storageClassName }}
-        selector:
-          matchLabels:
-            name: {{ .Release.Name }}-postgre-pv
+        storageClassName: {{ .Release.Name }}-csi-hostpath-sc
 
         
