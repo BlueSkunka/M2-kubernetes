@@ -1,10 +1,47 @@
 # OROCOMMERCE
 
 Groupe 1 :
-- SCHULER Kenza
-- PERDRIX Olivier
-- ROME Mathis
-- SOMVEILLE Quentin
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/BlueSkunka">
+        <img src="https://github.com/BlueSkunka.png" width="50px;" alt="Quentin Somveille"/>
+        <br />
+        <sub><b>Quentin Somveille</b></sub>
+      </a>
+      <br />
+      <sub>BlueSkunka</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mathisrome">
+        <img src="https://github.com/mathisrome.png" width="50px;" alt="Mathis Rome"/>
+        <br />
+        <sub><b>Mathis Rome</b></sub>
+      </a>
+      <br />
+      <sub>mathisrome</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/operdrix">
+        <img src="https://github.com/operdrix.png" width="50px;" alt="Olivier PERDRIX"/>
+        <br />
+        <sub><b>Olivier PERDRIX</b></sub>
+      </a>
+      <br />
+      <sub>operdrix</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/s-kenza">
+        <img src="https://github.com/s-kenza.png" width="50px;" alt="Kenza Schuler"/>
+        <br />
+        <sub><b>Kenza Schuler</b></sub>
+      </a>
+      <br />
+      <sub>s-kenza</sub>
+    </td>
+  </tr>
+</table>
 
 ## Introduction
 
