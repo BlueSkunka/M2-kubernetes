@@ -6,14 +6,40 @@ Groupe:
 - ROME Mathis
 - SOMVEILLE Quentin
 
-# Prérequis
+## Introduction
+
+Vous retrouverez dans ce projet, notre rendu Kubernetes. L'objectif du projet était de transformer le `docker-compose` de démonstration du CRM ORO en un Helm Chart.
+
+L'architecture des dossiers se présente comme telle :
+```text
+├── dockoro
+├── kuboro
+│   ├── classic_version
+│   └── helm_version
+└── prom_grafana
+    ├── helm_version
+    └── ingress_classic_version
+```
+- Dockoro est le dossier contenant la démonstration du CRM
+- Kuboro contient 2 dossiers, un premier correspondant à notre architecture avec des manifests Kubernetes, ce dossier à principalement servi à comprendre comment fonctionnait les différentes ressources Kubernetes, le second est la retranscription du premier mais en Helm Chart
+- prom_grafana contient une version classique, avec l'utilisation d'un `Ingress Controller` fait maison, tandis que le second dossier utilise un fichier `values.yaml` adapté à notre besoin.
+
+Dans un premier temps, nous vons donnerons les prérequis au bon lancement de notre architecture.
+
+Nous verrons ensuite un diagramme Mermaid de notre architecture.
+
+Dans un troisième temps, nous démarerrons notre application et nos outils de monitorings
+
+Pour finir sur un comparatif avant/après entre l'architecture de la démonstration et la notre.
+
+## Prérequis
 
 Démarrer votre service Docker :
 ```shell
 sudo service docker start
 ```
 
-Démarrer le serveur minikube :
+Démarrer le cluster minikube :
 ```shell
 minikube start
 ```
@@ -24,7 +50,7 @@ minikube addons enable ingress
 minikube addons enable metrics-server
 ```
 
-Démarrer le tunnel Minikube : 
+Démarrer le tunnel Minikube :
 ```shell
 minikube tunnel
 ```
@@ -34,9 +60,99 @@ Modifier votre fichier `hosts` pour ajouter la configuration suivante :
 127.0.0.1   oro.demo
 ```
 
-# Démarrer orocommerce
+## Architecture 
 
-## Kubernetes classique
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {
+  'fontFamily': 'Inter, sans-serif',
+  'primaryTextColor': '#1f1f1f',
+  'clusterBorder': '#326CE5',
+  'nodeBorder': '#326CE5',
+  'clusterBkg': '#F0F6FF',
+  'primaryColor': '#ffffff',
+  'edgeLabelBackground': '#ffffff'
+}}}%%
+
+graph TD
+    subgraph "User"
+        user((User))
+    end
+
+    subgraph "Kubernetes Cluster"
+        subgraph "Node: Minikube"
+            
+            subgraph "Ingress Controller"
+                ingress([IngressNginx])
+            end
+
+            subgraph "Namespace: orocommerce"
+                serviceApplication[Service: Application]
+
+                subgraph deploymentPHP["Deployment: PHP"]
+                    podApplication(((PHP Pod)))
+                end
+
+                subgraph deploymentNginx["Deployment: Nginx"]
+                    podNginx(((Nginx Pod)))
+                end
+
+                serviceNginx[Service: Nginx]
+
+                servicePostgre[Service: PostgreSQL]
+                subgraph statefulPostgre["StatefulSet: PostgreSQL"]
+                    podPostgre(((PostgreSQL Pod)))
+                end
+
+                serviceWebsocket[Service: Websocket]
+                subgraph deploymentWebsocket["Deployment: Websocket"]
+                    podWebsocket(((Websocket Pod)))
+                end
+
+                subgraph deploymentCron["Deployment: Cron"]
+                    podCron(((Cron Pod)))
+                end
+
+                subgraph deploymentConsumer["Deployment: Consumer"]
+                    podConsumer(((Consumer Pod)))
+                end
+            end
+
+            subgraph "Namespace: monitoring"
+                prometheus[Prometheus]
+                grafana[Grafana]
+            end
+        end
+    end
+
+    user --> ingress
+    ingress --> serviceNginx
+
+    serviceApplication --> podApplication
+    servicePostgre --> podPostgre
+    serviceNginx --> podNginx
+    serviceWebsocket --> podWebsocket
+
+    podNginx --> serviceApplication
+    podNginx --> serviceWebsocket
+    podApplication --> servicePostgre
+    podWebsocket --> servicePostgre
+    podCron --> servicePostgre
+    podConsumer --> servicePostgre
+    
+    style deploymentPHP stroke-dasharray: 5 5,fill:#F0F6FF
+    style deploymentNginx stroke-dasharray: 5 5,fill:#F0F6FF
+    style deploymentWebsocket stroke-dasharray: 5 5,fill:#F0F6FF
+    style deploymentCron stroke-dasharray: 5 5,fill:#F0F6FF
+    style deploymentConsumer stroke-dasharray: 5 5,fill:#F0F6FF
+    style statefulPostgre stroke-dasharray: 0,fill:#DAE6FB
+
+```
+
+## Démarrer notre application
+
+### Kubernetes classique
+
+#### Orocommerce
 
 Se placer dans le dossier `kuboro/classic_version`, et exécuter la commande suivante :
 
@@ -44,78 +160,56 @@ Se placer dans le dossier `kuboro/classic_version`, et exécuter la commande sui
 bash apply-project.bash
 ```
 
-Accéder à l'application via l'url `https://oro.demo`.
-
-Pour vous connecter : 
-# TODO !!!!!!!
-
-```text
-user : JESAISPLUSMATHISFAUTCHANGERICI
-password : JESAISPLUSMATHISFAUTCHANGERICI
-```
-# TODO !!!!!!!
+Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
 
 Pour arreter l'environnement, lancer la commande suivante :
 ```shell
 bash delete-project.bash
 ```
 
-## Helm Charts 
+#### Monitoring
 
-# TODO !!!!!!!
-# TODO !!!!!!!
-# TODO !!!!!!!
+Se placer dans le dossier `prom_grafana/ingress_classic_version`, et exécuter la commande suivante :
 
-# Architecture 
-
-```asci
-+------------------------------------------+
-|            OroCommerce Helm              |
-+------------------------------------------+
-                    |
-        +----------+----------+
-        |          |          |
-   +----+----+ +---+----+ +--+---+
-   | Frontend | |Backend | |  DB  |
-   +----+----+ +---+----+ +--+---+
-        |          |          |
-   +----+----+ +---+----+ +--+---+
-   |  Nginx   | |PHP-FPM | |PostgreSQL|
-   |Deployment| |+ HPA   | |StatefulSet|
-   +----+----+ +---+----+ +--+---+
-        |          |          |
-   +----+----+ +---+----+ +--+---+
-   | Service  | |Consumer| | PVC  |
-   +----+----+ +--------+ +------+
-        |
-   +----+----+
-   | Ingress |
-   +---------+
-
-   +------------------------------------------+
-   |            Monitoring Stack              |
-   +------------------------------------------+
-                    |
-        +----------+----------+
-        |                     |
-   +----+----+          +----+----+
-   |Prometheus|          | Grafana |
-   +---------+          +---------+
-
-   +------------------------------------------+
-   |         Persistent Storage               |
-   +------------------------------------------+
-        |          |          |          |
-   +----+----+ +---+----+ +--+---+ +----+----+
-   | App PVC | |Cache PVC| |Public| |Private |
-   +---------+ +---------+ | PVC  | | PVC   |
-                          +-------+ +--------+
-
+```shell
+bash apply-prom-stack-classic.bash
 ```
-# Comparatif avant / après 
 
-## Avant 
-# TODO !!!!!!!
+Pour arrêter l'environnement, lancer la commande suivante :
+```shell
+bash delete-prom-stack.bash
+```
 
-## Après 
-# TODO !!!!!!!
+### Helm Charts
+
+Se placer dans le dossier `kuboro/helm_version`, et exécuter la commande suivante :
+
+```shell
+helm install -n orocommerce --create-namespace orocommerce .
+```
+
+Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
+
+Pour arreter l'environnement, lancer la commande suivante :
+```shell
+helm uninstall -n orocommerce orocommerce
+```
+
+#### Monitoring
+
+Se placer dans le dossier `prom_grafana/helm_version`, et exécuter la commande suivante :
+
+```shell
+bash apply-prom-stack-helm.bash
+```
+
+Pour arrêter l'environnement, lancer la commande suivante :
+```shell
+bash delete-prom-stack-helm.bash
+```
+
+## Comparatif avant / après
+
+### Avant
+
+### Après

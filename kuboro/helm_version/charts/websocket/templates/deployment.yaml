@@ -24,7 +24,7 @@ spec:
           command: 
             - "sh"
             - "-c"
-            - "until nc -z {{ .Release.Name }}-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done"
+            - "until nc -z {{ .Release.Name }}-app 9000; do echo \"Waiting for php-fpm connection...\"; sleep 1; done && until nc -z {{ .Release.Name }}-postgre 5432; do echo \"Waiting for database connection...\"; sleep 1; done"
       containers:
       - name: "websocket"
         image: {{ .Values.images.container.repository }}:{{ .Values.images.container.tag }}
