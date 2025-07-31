@@ -2,11 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
-
-namespace: orocommerce
-
 storageClass:
   name: local-storage
   provisioner: kubernetes.io/no-provisioner
@@ -16,8 +11,6 @@ storageClass:
 envLogValue: php://stderr
 
 persistentVolumes:
-  ## Utiliser pour le node affinity du pv
-  nodeHostname: minikube
   ## PV de l'application
   appCapacity: 10Gi
   appAccessModes:
@@ -55,11 +48,6 @@ persistentVolumes:
     - ReadWriteMany
     - ReadOnlyMany
   appPublicHostPath: /orocommerce/public
-  ## PV du NGNIX
-  nginxCapacity: 10Gi
-  nginxAccessModes:
-    - ReadWriteMany
-  nginxHostPath: /orocommerce/nginx
 
 
 secrets:

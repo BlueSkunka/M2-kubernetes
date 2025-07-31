@@ -4,7 +4,6 @@ metadata:
   name: {{ .Release.Name }}-nginx
   labels:
     app: {{ .Release.Name }}-nginx
-  namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
   type: {{ .Values.service.type }}
   ports:

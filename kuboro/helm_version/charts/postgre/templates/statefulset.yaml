@@ -4,7 +4,6 @@ metadata:
   name: {{ .Release.Name }}-postgre
   labels:
     app: {{ .Release.Name }}-postgre
-  namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
   selector:
     matchLabels:

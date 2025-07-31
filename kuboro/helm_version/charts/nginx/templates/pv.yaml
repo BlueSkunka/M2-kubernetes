@@ -1,17 +1,18 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-postgre-pv
+  name: {{ .Release.Name }}-nginx-pv
   labels:
-    name: {{ .Release.Name }}-postgre-pv
+    name: {{ .Release.Name }}-nginx-pv
+  namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
   capacity:
     storage: {{ default "10Gi" .Values.persistentVolume.storage }}
   {{- with .Values.persistentVolume.accessModes }}
   accessModes:
-  {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   persistentVolumeReclaimPolicy: {{ default "Retain" .Values.persistentVolume.reclaimPolicy }}
   storageClassName: {{ default "local-storage" .Values.persistentVolume.storageClassName }}
   hostPath:
-    path: {{ default "/orocommerce/postgre" .Values.persistentVolume.hostPath }}
+    path: {{ default "/orocommerce/nginx" .Values.persistentVolume.hostPath }}

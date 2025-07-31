@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-nginx-pvc
+spec:
+  {{- with .Values.persistentVolume.accessModes }}
+  accessModes:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ default "10Gi" .Values.persistentVolume.storage }}
+  storageClassName: {{ default "local-storage" .Values.persistentVolume.storageClassName }}
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-nginx-pv

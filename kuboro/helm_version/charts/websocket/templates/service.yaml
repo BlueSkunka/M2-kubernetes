@@ -4,7 +4,6 @@ metadata:
   name: {{ .Release.Name }}-websocket
   labels:
     app: {{ .Release.Name }}-websocket
-  namespace: {{ default "orocommerce" .Values.namespace }}
 spec:
   type: {{ .Values.service.type }}
   ports:

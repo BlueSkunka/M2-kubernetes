@@ -16,11 +16,4 @@ spec:
   storageClassName: {{ default "local-storage" .Values.storageClass.name }}
   hostPath:
     path: {{ default "/orocommerce/public" .Values.persistentVolumes.appPublicHostPath }}
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - {{ .Values.persistentVolumes.nodeHostname }}
+  

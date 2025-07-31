@@ -81,6 +81,14 @@ readinessProbe:
   periodSeconds: 5
   timeoutSeconds: 30
 
+persistentVolume:
+  accessModes:
+    - ReadWriteMany
+  hostPath: /orocommerce/nginx
+  storage: 10Gi
+  storageClassName: local-storage
+  reclaimPolicy: Retain
+
 # Additional volumes on the output Deployment definition.
 volumes: []
 # - name: foo

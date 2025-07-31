@@ -15,11 +15,3 @@ spec:
   storageClassName: local-storage
   hostPath:
     path: /orocommerce/private
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - minikube
