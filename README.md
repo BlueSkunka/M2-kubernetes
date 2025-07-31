@@ -223,7 +223,7 @@ bash delete-prom-stack-helm.bash
 
 | Aspect |  Avant  | Après |
 |:-----|:--------:|------:|
-| Installation  | / | / |
+| Installation  | Gestion des dépendences simples | Plus compliqué avec l'utilisation des InitContainers |
 | Modularité   |  Limité : tout est contenu dans un seul fichier docker-compose.yml, peu de séparation de responsabilités  |   Fichiers découplés (templates, values.yaml, secrets, ingress...), meilleure maintenabilité |
 | Déploiement cloud   | Pas adapté pour des plateformes cloud-native | Optimisé pour Kubernetes, support des déploiements dans le cloud ou en cluster on-prem |
 | Mise à jour | Manuelle : nécessite de redéployer entièrement ou modifier le fichier Compose |    Support des mises à jour progressives (helm upgrade), rollback facile, versionning |
