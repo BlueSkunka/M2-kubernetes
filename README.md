@@ -60,7 +60,7 @@ Modifier votre fichier `hosts` pour ajouter la configuration suivante :
 127.0.0.1   oro.demo
 ```
 
-## Architecture 
+## Architecture
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -210,6 +210,14 @@ bash delete-prom-stack-helm.bash
 
 ## Comparatif avant / après
 
-### Avant
-
-### Après
+| Aspect |  Avant  | Après |
+|:-----|:--------:|------:|
+| Installation  | / | / |
+| Modularité   |  Limité : tout est contenu dans un seul fichier docker-compose.yml, peu de séparation de responsabilités  |   Fichiers découplés (templates, values.yaml, secrets, ingress...), meilleure maintenabilité |
+| Déploiement cloud   | Pas adapté pour des plateformes cloud-native | Optimisé pour Kubernetes, support des déploiements dans le cloud ou en cluster on-prem |
+| Mise à jour   | Manuelle : nécessite de redéployer entièrement ou modifier le fichier Compose |    Support des mises à jour progressives (helm upgrade), rollback facile, versionning |
+| Surveillance   | Basique, géré avec des volumes locaux ou docker logs | Intégration avec Prometheus, Grafana |
+| Sécurité   | Environnement local secrets en clair ou dans .env | Meilleure gestion des secrets via Kubernetes Secrets |
+| Scalabilité   | Très limitée (pas de scaling horizontal automatique, ni de gestion fine des ressources) | Support du scaling automatique (HPA), gestion fine des ressources CPU/mémoire, stratégie de redémarrage |
+| Usage   | Idéal pour le développement local ou les tests de démonstration | Configuration multi-environnement |
+| Résilience   | Aucune | Gestion des erreurs, redémarrage automatique, probes de liveness/readiness |
