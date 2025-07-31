@@ -91,94 +91,106 @@ Modifier votre fichier `hosts` pour ajouter la configuration suivante :
 
 ## Démarrer notre application
 
-### Kubernetes classique
+### A. Via Kubernetes classique
 
 #### Orocommerce
 
 Se placer dans le dossier `kuboro/classic_version`, et exécuter la commande suivante :
 
 ```shell
+cd kuboro/classic_version
 bash apply-project.bash
 ```
 
 Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
 
-[Administration](https://oro.demo/admin) : admin/admin
+[Administration](https://oro.demo/admin) : `admin` / `admin`
 
 [Compte classique](https://oro.demo/customer/user/login) :
-- AmandaRCole@example.org / AmandaRCole@example.org
-- BrandaJSanborn@example.org / BrandaJSanborn@example.org
-
-Pour arreter l'environnement, lancer la commande suivante :
-```shell
-bash delete-project.bash
-```
+- `AmandaRCole@example.org` / `AmandaRCole@example.org`
+- `BrandaJSanborn@example.org` / `BrandaJSanborn@example.org`
 
 #### Monitoring
 
 Se placer dans le dossier `prom_grafana/ingress_classic_version`, et exécuter la commande suivante :
 
 ```shell
+cd prom_grafana/ingress_classic_version
 bash apply-prom-stack-classic.bash
 ```
 
 Une fois les pods lancés vous pouvez accéder au dashboard via l'url [https://grafana.minikube](https://grafana.minikube).
 
-Identifiant : admin / prom-operator
+Identifiant : `admin` / `prom-operator`
 
-Pour arrêter l'environnement, lancer la commande suivante :
+#### Arrêt des services
+
+Pour arreter orocommerce, lancer la commande suivante :
 ```shell
+cd kuboro/classic_version
+bash delete-project.bash
+```
+
+Pour arrêter prometeus et grafana, lancer la commande suivante :
+```shell
+cd prom_grafana/ingress_classic_version
 bash delete-prom-stack.bash
 ```
 
-### Helm Charts
+### B. Via Helm Charts
 
 Se placer dans le dossier `kuboro/helm_version`, et exécuter la commande suivante :
 
 ```shell
+cd kuboro/helm_version
 helm install -n orocommerce --create-namespace orocommerce .
 ```
 
 Une fois le job de restauration complété vous pouvez accéder à l'application via l'url [https://oro.demo](https://oro.demo).
 
-[Administration](https://oro.demo/admin) : admin/admin
+[Administration](https://oro.demo/admin) : `admin` / `admin`
 
 [Compte classique](https://oro.demo/customer/user/login) :
-- AmandaRCole@example.org / AmandaRCole@example.org
-- BrandaJSanborn@example.org / BrandaJSanborn@example.org
-
-Pour arreter l'environnement, lancer la commande suivante :
-```shell
-helm uninstall -n orocommerce orocommerce
-```
+- `AmandaRCole@example.org` / `AmandaRCole@example.org`
+- `BrandaJSanborn@example.org` / `BrandaJSanborn@example.org`
 
 #### Monitoring
 
 Se placer dans le dossier `prom_grafana/helm_version`, et exécuter la commande suivante :
 
 ```shell
+cd prom_grafana/helm_version
 bash apply-prom-stack-helm.bash
 ```
 
 Une fois les pods lancés vous pouvez accéder au dashboard via l'url [https://grafana.minikube](https://grafana.minikube).
 
-Identifiant : admin / prom-operator
+Identifiant : `admin` / `prom-operator`
 
-Pour arrêter l'environnement, lancer la commande suivante :
+#### Arrêt des services
+
+Pour arreter orocommerce, lancer la commande suivante :
 ```shell
+cd kuboro/helm_version
+helm uninstall -n orocommerce orocommerce
+```
+
+Pour arrêter Prometeus et Grafana, lancer la commande suivante :
+```shell
+cd prom_grafana/helm_version
 bash delete-prom-stack-helm.bash
 ```
 
 ## Comparatif avant / après
 
 | Aspect |  Avant  | Après |
-|:-----|:--------:|------:|
-| Installation  | Gestion des dépendences simples | Plus compliqué avec l'utilisation des InitContainers |
-| Modularité   |  Limité : tout est contenu dans un seul fichier docker-compose.yml, peu de séparation de responsabilités  |   Fichiers découplés (templates, values.yaml, secrets, ingress...), meilleure maintenabilité |
-| Déploiement cloud   | Pas adapté pour des plateformes cloud-native | Optimisé pour Kubernetes, support des déploiements dans le cloud ou en cluster on-prem |
-| Mise à jour | Manuelle : nécessite de redéployer entièrement ou modifier le fichier Compose |    Support des mises à jour progressives (helm upgrade), rollback facile, versionning |
-| Surveillance   | Basique, géré avec docker logs | Intégration avec Prometheus, Grafana |
-| Sécurité   | Environnement local secrets en clair ou dans .env | Meilleure gestion des secrets via Kubernetes Secrets |
-| Scalabilité   | Très limitée (pas de scaling horizontal automatique) | Support du scaling automatique (HPA), gestion fine des ressources CPU/mémoire |
-| Usage   | Idéal pour le développement local ou les tests de démonstration | Configuration multi-environnement |
-| Résilience   | Aucune | Gestion des erreurs, probes de liveness/readiness |
+|:-----|:--------|:------|
+| **Installation**  | ✅ Gestion des dépendences simples | ❌ Plus compliqué avec l'utilisation des InitContainers |
+| **Modularité**   |  ❌ Limité : tout est contenu dans un seul fichier docker-compose.yml, peu de séparation de responsabilités  |   ✅ Fichiers découplés (templates, values.yaml, secrets, ingress...), meilleure maintenabilité |
+| **Déploiement cloud**   | ❌ Pas adapté pour des plateformes cloud-native | ✅ Optimisé pour Kubernetes, support des déploiements dans le cloud ou en cluster on-prem |
+| **Mise à jour** | ❌ Manuelle : nécessite de redéployer entièrement ou modifier le fichier Compose |    ✅ Support des mises à jour progressives (helm upgrade), rollback facile, versionning |
+| **Surveillance**   | ☑️ Basique, géré avec docker logs | ✅ Intégration avec Prometheus, Grafana |
+| **Sécurité**   | ❌ Environnement local secrets en clair ou dans .env | ✅ Meilleure gestion des secrets via Kubernetes Secrets |
+| **Scalabilité**   | ❌ Très limitée (pas de scaling horizontal automatique) | ✅ Support du scaling automatique (HPA), gestion fine des ressources CPU/mémoire |
+| **Usage**   | 🏠 Idéal pour le développement local ou les tests de démonstration | 🌐 Configuration multi-environnement |
+| **Résilience**   | ❌ Aucune | ✅ Gestion des erreurs, probes de liveness/readiness |
